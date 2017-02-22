@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Navigator
 } from 'react-native'
-import { styleColor, Screens, Errors, Chunks, Container } from '../..'
+import { Styles } from 'react-chunky'
+import { Errors } from '../..'
 
 export default class App extends Component {
 
@@ -14,11 +15,7 @@ export default class App extends Component {
     super(props)
   }
 
-  configureScene(route, stack) {
-    return Navigator.SceneConfigs[route && route.transition ? route.transition : "PushFromRight"]
-  }
-
-  renderScene(route, navigator) {
+  renderRoute(route, props) {
     if (!route) {
       throw Errors.UNABLE_TO_LOAD_ROUTE("", "the route is unidentified")
     }
@@ -28,42 +25,61 @@ export default class App extends Component {
     }
 
     const Screen = route.screen
-    const props = Object.assign({
-      navigator,
+    const screenProps = Object.assign({
       transitions: route.transitions,
       theme: this.props.theme
-    }, route.props || {})
+    }, props || {}, route.props || {})
 
-    return (<Screen {...props} />)
+    return (<Screen {...screenProps} />)
   }
 
-  get styles() {
-    return StyleSheet.create({
-      statusBar: {
-        flex: 1,
-        ...Platform.select({
-          ios: {
-            backgroundColor: styleColor(this.props.theme.statusBarColor),
-            paddingTop: 20,
-          },
-          android: {
-            backgroundColor: styleColor(this.props.theme.statusBarColor),
-            paddingTop: 0,
-          },
-        })
-      },
-    })
+  configureScene(route, stack) {
+    return Navigator.SceneConfigs[route && route.animation ? route.animation : "PushFromRight"]
+  }
+
+  renderScene(route, navigator) {
+    return this.renderRoute(route, { navigator })
+  }
+
+  renderStatusBar() {
+    return (<StatusBar barStyle={this.props.theme.statusBarType}/>)
+  }
+
+  renderNavigator() {
+    return (<Navigator initialRoute={this.props.initialRoute}
+                           ref="navigator"
+                           configureScene={this.configureScene.bind(this)}
+                           renderScene={this.renderScene.bind(this)}/>)
   }
 
   render() {
     return (
         <View style={this.styles.statusBar}>
-          <StatusBar barStyle={this.props.theme.statusBarType}/>
-            <Navigator initialRoute={this.props.initialRoute}
-                       ref="navigator"
-                       configureScene={this.configureScene.bind(this)}
-                       renderScene={this.renderScene.bind(this)}/>
+          { this.renderStatusBar() }
+          { this.renderNavigator() }
          </View>
     )
   }
+
+  get styles() {
+    return StyleSheet.create(
+      Platform.select({
+        ios: {
+          statusBar: {
+            flex: 1,
+            backgroundColor: Styles.styleColor(this.props.theme.statusBarColor),
+            paddingTop: 20
+          }
+        },
+        android: {
+          statusBar: {
+            flex: 1,
+            backgroundColor: Styles.styleColor(this.props.theme.statusBarColor),
+            paddingTop: 0
+          }
+        }
+      })
+    )
+  }
+
 }

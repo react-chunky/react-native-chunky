@@ -1,7 +1,7 @@
 import {
   StyleSheet
 } from 'react-native'
-import { styleColor } from 'react-chunky'
+import { Styles } from 'react-chunky'
 
 export const containers = (theme) => StyleSheet.create({
   centered: {
@@ -19,7 +19,7 @@ export const containers = (theme) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: styleColor(theme.backgroundColor),
+    backgroundColor: Styles.styleColor(theme.backgroundColor),
   },
   text: {
     fontSize: 20,

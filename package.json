@@ -4,7 +4,8 @@
   "description": "The Full Stack React Framework",
   "scripts": {
     "test": "react-native-savor test",
-    "coverage": "react-native-savor coverage"
+    "coverage": "react-native-savor coverage",
+    "codeclimate": "react-native-savor codeclimate"
   },
   "repository": {
     "type": "git",
@@ -15,18 +16,9 @@
   "bugs": {
     "url": "https://github.com/react-chunky/react-native-chunky/issues"
   },
-  "babel": {
-    "plugins": [
-      "transform-react-jsx"
-    ],
-    "presets": [
-      "react-native"
-    ]
-  },
   "homepage": "https://github.com/react-chunky/react-native-chunky",
   "dependencies": {
-    "react-chunky": "0.x",
-    "react-native": "0.x"
+    "react-chunky": "0.x"
   },
   "devDependencies": {
     "react-native-savor": "0.x"

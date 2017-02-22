@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
-import { styleColor } from 'react-chunky'
 import * as DefaultStyles from '../styles'
 
 export default class Screen extends Component {
@@ -34,6 +33,7 @@ export default class Screen extends Component {
       const value = `${newValue}`.substring(0, 1).toUpperCase() + `${newValue}`.substring(1).toLowerCase()
       this[`${name}On${value}`] && this[`${name}On${value}`]()
     }
+
     this[`${name}OnChanged`] && this[`${name}OnChanged`](oldValue, newValue)
   }
 
@@ -44,14 +44,11 @@ export default class Screen extends Component {
 
     const oldValue = this.props[name]()
     const newValue = nextProps[name]()
+
     this.valueChanged(name, oldValue, newValue)
   }
 
   observeValues(names, nextProps) {
     names.forEach(name => this.observeValue(name, nextProps))
-  }
-
-  render () {
-    return (<View/>)
   }
 }
