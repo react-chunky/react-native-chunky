@@ -15,11 +15,11 @@ savor.add("should register an app", (context, done) => {
   context.stub(AppRegistry, "registerComponent", (name, main) => {
     const app = main()
     const container = context.mount(<app/>)
+    done()
   })
   renderApp(config)
 
   AppRegistry.registerComponent.restore()
-  done()
 }).
 
 add("should not render an app without any routes", (context, done) => {
