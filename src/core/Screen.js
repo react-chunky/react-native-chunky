@@ -28,13 +28,13 @@ export default class Screen extends Component {
     return (nextProps[name]() != this.props[name]())
   }
 
-  valueChanged(name, oldValue, newValue) {
+  valueChanged(name, oldValue, newValue, nextProps) {
     if (typeof oldValue === 'boolean') {
       const value = `${newValue}`.substring(0, 1).toUpperCase() + `${newValue}`.substring(1).toLowerCase()
-      this[`${name}On${value}`] && this[`${name}On${value}`]()
+      this[`${name}On${value}`] && this[`${name}On${value}`](nextProps)
     }
 
-    this[`${name}OnChanged`] && this[`${name}OnChanged`](oldValue, newValue)
+    this[`${name}OnChanged`] && this[`${name}OnChanged`](oldValue, newValue, nextProps)
   }
 
   observeValue(name, nextProps) {
@@ -45,7 +45,7 @@ export default class Screen extends Component {
     const oldValue = this.props[name]()
     const newValue = nextProps[name]()
 
-    this.valueChanged(name, oldValue, newValue)
+    this.valueChanged(name, oldValue, newValue, nextProps)
   }
 
   observeValues(names, nextProps) {
