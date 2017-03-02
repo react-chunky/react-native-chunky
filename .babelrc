@@ -1,9 +1,0 @@
-{
-  "plugins": [
-    "transform-react-jsx"
-  ],
-  "presets": [
-    "react-native",
-    "es2015"
-  ]
-}
