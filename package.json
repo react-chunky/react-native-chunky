@@ -1,0 +1,26 @@
+{
+  "name": "react-native-chunky",
+  "version": "0.4.11",
+  "description": "The Full Stack React Framework",
+  "scripts": {
+    "test": "react-native-savor test",
+    "coverage": "react-native-savor coverage",
+    "codeclimate": "react-native-savor codeclimate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/react-chunky/react-native-chunky.git"
+  },
+  "author": "I. Dan Calinescu <idancalinescu@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/react-chunky/react-native-chunky/issues"
+  },
+  "homepage": "https://github.com/react-chunky/react-native-chunky",
+  "dependencies": {
+    "react-chunky": "0.4.x"
+  },
+  "devDependencies": {
+    "react-native-savor": "0.x"
+  }
+}
