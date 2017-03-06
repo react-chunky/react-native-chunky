@@ -5,7 +5,7 @@
 const path = require('path')
 const spawn = require('child_process').spawn
 
-const appDir = process.cwd()
+const appDir = path.dirname(process.cwd())
 const libDir = path.resolve(appDir, 'node_modules')
 const reactNativeDir = path.resolve(libDir, 'react-native')
 const packagerDir = path.resolve(reactNativeDir, 'packager')
