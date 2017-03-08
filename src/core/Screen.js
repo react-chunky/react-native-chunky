@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View } from 'react-native'
+import { Core } from 'react-chunky'
 import * as DefaultStyles from '../styles'
 
-export default class Screen extends Component {
+export default class Screen extends Core.Screen {
 
   get styles() {
     return {
@@ -22,33 +23,5 @@ export default class Screen extends Component {
     }
 
     this.props.navigator[transition.type](transition.route, transition.animation || "PushFromRight")
-  }
-
-  didValueChange(name, nextProps) {
-    return (nextProps[name]() != this.props[name]())
-  }
-
-  valueChanged(name, oldValue, newValue, nextProps) {
-    if (typeof oldValue === 'boolean') {
-      const value = `${newValue}`.substring(0, 1).toUpperCase() + `${newValue}`.substring(1).toLowerCase()
-      this[`${name}On${value}`] && this[`${name}On${value}`](nextProps)
-    }
-
-    this[`${name}OnChanged`] && this[`${name}OnChanged`](oldValue, newValue, nextProps)
-  }
-
-  observeValue(name, nextProps) {
-    if (!this.didValueChange(name, nextProps)) {
-      return
-    }
-
-    const oldValue = this.props[name]()
-    const newValue = nextProps[name]()
-
-    this.valueChanged(name, oldValue, newValue, nextProps)
-  }
-
-  observeValues(names, nextProps) {
-    names.forEach(name => this.observeValue(name, nextProps))
   }
 }
