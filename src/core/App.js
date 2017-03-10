@@ -20,6 +20,7 @@ export default class App extends Component {
 
       section.chunks.forEach(chunkName => {
         const chunk = this.props.chunks[chunkName]
+        var chunkScreens = {}
 
         for(const routeName in chunk.routes) {
           const route = chunk.routes[routeName]
@@ -27,7 +28,7 @@ export default class App extends Component {
             transitions: route.transitions,
             theme: this.props.theme
           }, route.props || {})
-          const screen = (props) => <route.screen {...props} {...screenProps}/>
+          var screen = (props) => <route.screen {...props} {...screenProps}/>
           const path = `${chunkName}/${routeName}`
           const navigationOptions = {
             title: route.title,
@@ -38,18 +39,29 @@ export default class App extends Component {
             }
           }
 
+          if (route.hideBack) {
+            navigationOptions.header.left = () => {}
+          }
+
           if (layout === 'tabs') {
             navigationOptions.tabBar = {
               label: route.title,
               icon: <Image source={chunk.assets.icon}/>
             }
+            chunkScreens[path] = { screen, navigationOptions }
+          } else {
+            screens[path] = { screen, navigationOptions}
           }
+        }
 
-          if (route.hideBack) {
-            navigationOptions.header.left = () => {}
-          }
-
-          screens[path] = { screen, navigationOptions}
+        if (Object.keys(chunkScreens).length > 0) {
+          screens[chunkName] = { screen: StackNavigator(chunkScreens), navigationOptions: {
+            header: {
+              style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
+              left: () => {},
+              style: { height: 0 }
+            }
+          }}
         }
       })
 

@@ -24,12 +24,10 @@ export default class Screen extends Core.Screen {
 
     const transition = this.props.transitions[name]
 
-    if (!transition.type) {
-      return
+    if (transition.replace) {
+      this.setState({ triggered: true })
     }
-
-
-    this.setState({ triggered: true })
+    
     this.props.navigation.navigate(transition.id)
   }
 }
