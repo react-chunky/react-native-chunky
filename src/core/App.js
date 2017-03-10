@@ -1,85 +1,81 @@
+import { StackNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'
 import React, { Component } from 'react'
-import {
-  StatusBar,
-  View,
-  Platform,
-  StyleSheet,
-  Navigator
-} from 'react-native'
+import { Image } from 'react-native'
 import { Styles } from 'react-chunky'
-import { Errors } from '../..'
 
 export default class App extends Component {
 
   constructor(props) {
     super(props)
+
+    this.init()
   }
 
-  renderRoute(route, props) {
-    if (!route) {
-      throw Errors.UNABLE_TO_LOAD_ROUTE("", "the route is unidentified")
+  init() {
+    var navigators = {}
+    for(const sectionName in this.props.sections) {
+      const section = this.props.sections[sectionName]
+      const layout = section.layout || "default"
+      var screens = {}
+
+      section.chunks.forEach(chunkName => {
+        const chunk = this.props.chunks[chunkName]
+
+        for(const routeName in chunk.routes) {
+          const route = chunk.routes[routeName]
+          const screenProps = Object.assign({
+            transitions: route.transitions,
+            theme: this.props.theme
+          }, route.props || {})
+          const screen = (props) => <route.screen {...props} {...screenProps}/>
+          const path = `${chunkName}/${routeName}`
+          const navigationOptions = {
+            title: route.title,
+            header: {
+              visible: !route.hideHeader,
+              tintColor: Styles.styleColor(this.props.theme.tintColor || "#FFFFFF"),
+              style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
+            }
+          }
+
+          if (layout === 'tabs') {
+            navigationOptions.tabBar = {
+              label: route.title,
+              icon: <Image source={chunk.assets.icon}/>
+            }
+          }
+
+          if (route.hideBack) {
+            navigationOptions.header.left = () => {}
+          }
+
+          screens[path] = { screen, navigationOptions}
+        }
+      })
+
+      this._navigator = this._navigator || {}
+      switch(layout) {
+        case 'tabs':
+          navigators = Object.assign({}, navigators, { [sectionName]: { screen: TabNavigator(screens) }})
+          break
+        case 'drawer':
+          navigators = Object.assign({}, navigators, { [sectionName]: { screen: DrawerNavigator(screens) }})
+          break;
+        default:
+          navigators = Object.assign({}, navigators, screens)
+          break;
+      }
     }
 
-    if (!route.screen) {
-      throw Errors.UNABLE_TO_LOAD_ROUTE("", "the route has no screen")
-    }
-
-    const Screen = route.screen
-    const screenProps = Object.assign({
-      transitions: route.transitions,
-      theme: this.props.theme
-    }, props || {}, route.props || {})
-
-    return (<Screen {...screenProps} />)
+    this._navigator = StackNavigator(navigators)
   }
 
-  configureScene(route, stack) {
-    return Navigator.SceneConfigs[route && route.animation ? route.animation : "PushFromRight"]
-  }
-
-  renderScene(route, navigator) {
-    return this.renderRoute(route, { navigator })
-  }
-
-  renderStatusBar() {
-    return (<StatusBar barStyle={this.props.theme.statusBarType}/>)
-  }
-
-  renderNavigator() {
-    return (<Navigator initialRoute={this.props.initialRoute}
-                           ref="navigator"
-                           configureScene={this.configureScene.bind(this)}
-                           renderScene={this.renderScene.bind(this)}/>)
+  get navigator() {
+    return this._navigator
   }
 
   render() {
-    return (
-        <View style={this.styles.statusBar}>
-          { this.renderStatusBar() }
-          { this.renderNavigator() }
-         </View>
-    )
+    const Content = this.navigator
+    return <Content/>
   }
-
-  get styles() {
-    return StyleSheet.create(
-      Platform.select({
-        ios: {
-          statusBar: {
-            flex: 1,
-            backgroundColor: Styles.styleColor(this.props.theme.statusBarColor),
-            paddingTop: 20
-          }
-        },
-        android: {
-          statusBar: {
-            flex: 1,
-            backgroundColor: Styles.styleColor(this.props.theme.statusBarColor),
-            paddingTop: 0
-          }
-        }
-      })
-    )
-  }
-
 }

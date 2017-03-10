@@ -5,6 +5,12 @@ import * as DefaultStyles from '../styles'
 
 export default class Screen extends Core.Screen {
 
+  constructor(props) {
+    super(props)
+
+    this.state = { triggered: false }
+  }
+
   get styles() {
     return {
       containers: DefaultStyles.containers(this.props.theme)
@@ -12,7 +18,7 @@ export default class Screen extends Core.Screen {
   }
 
   triggerTransition (name) {
-    if (!this.props.transitions || !this.props.transitions[name]) {
+    if (this.state.triggered || !this.props.transitions || !this.props.transitions[name]) {
       return
     }
 
@@ -22,6 +28,8 @@ export default class Screen extends Core.Screen {
       return
     }
 
-    this.props.navigator[transition.type](transition.route, transition.animation || "PushFromRight")
+
+    this.setState({ triggered: true })
+    this.props.navigation.navigate(transition.id)
   }
 }

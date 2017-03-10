@@ -1,12 +1,11 @@
 import React from 'react'
 import { Core } from 'react-chunky'
-import { AppRegistry, AsyncStorage } from 'react-native'
+import { AppRegistry, AsyncStorage, Text } from 'react-native'
 
 import * as Styles from './src/styles'
 import * as Errors from './src/errors'
 import Screen from './src/core/Screen'
 import App from './src/core/App'
-import { StackNavigator } from 'react-navigation'
 
 global.localStorage = AsyncStorage
 
