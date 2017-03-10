@@ -21,6 +21,22 @@ export const containers = (theme) => StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Styles.styleColor(theme.backgroundColor),
   },
+  list: {
+    width: "100%",
+    backgroundColor: Styles.styleColor(theme.backgroundColor)
+  },
+  listRow: {
+    flex: 1,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 20
+  },
+  listRowSeparator: {
+    flex: 1,
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: '#999999',
+  },
   text: {
     fontSize: 20,
     textAlign: 'center',
