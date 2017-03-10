@@ -6,6 +6,7 @@ import * as Styles from './src/styles'
 import * as Errors from './src/errors'
 import Screen from './src/core/Screen'
 import App from './src/core/App'
+import { StackNavigator } from 'react-navigation'
 
 global.localStorage = AsyncStorage
 
