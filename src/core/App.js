@@ -94,38 +94,6 @@ export default class App extends Component {
     this._navigator = StackNavigator(navigators)
   }
 
-  extractDataFromRoute (chunk, routeName, layout) {
-    const route = chunk.routes[routeName]
-    const screenProps = Object.assign({
-      transitions: route.transitions,
-      theme: this.props.theme
-    }, route.props || {})
-    var screen = (props) => <route.screen {...props} {...screenProps}/>
-    const path = `${chunk.name}/${routeName}`
-    const navigationOptions = {
-      title: route.title,
-      header: {
-        visible: !route.hideHeader,
-        tintColor: Styles.styleColor(this.props.theme.tintColor || "#FFFFFF"),
-        style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
-      }
-    }
-
-    if (route.hideBack) {
-      navigationOptions.header.left = () => {}
-    }
-
-    if (layout === 'tabs') {
-      navigationOptions.tabBar = {
-        label: route.title,
-        icon: <Image source={chunk.assets.icon}/>
-      }
-      chunkScreens[path] = { screen, navigationOptions }
-    } else {
-      screens[path] = { screen, navigationOptions}
-    }
-  }
-
   get navigator() {
     return this._navigator
   }
