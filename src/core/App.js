@@ -27,7 +27,7 @@ export default class App extends Component {
           const screenProps = Object.assign({
             transitions: route.transitions,
             theme: this.props.theme
-          }, route.props || {})
+          }, route.props || {}, chunk.selectors || {}, chunk.assets || {})
           var screen = (props) => <route.screen {...props} {...screenProps}/>
           const path = `${chunkName}/${routeName}`
           const navigationOptions = {
