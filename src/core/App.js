@@ -17,52 +17,65 @@ export default class App extends Component {
       const section = this.props.sections[sectionName]
       const layout = section.layout || "default"
       var screens = {}
+      let chunk, loadingRoutes, chunkName
 
-      section.chunks.forEach(chunkName => {
-        const chunk = this.props.chunks[chunkName]
+      section.chunks.forEach( (sectionChunk, index) => {
+        if ( typeof sectionChunk === 'string' ) {
+          chunkName = sectionChunk
+          chunk = this.props.chunks[chunkName]
+          loadingRoutes = chunk.routes
+        } else if ( typeof sectionChunk === 'object' ) {
+          chunkName = sectionChunk.chunk
+          chunk = this.props.chunks[chunkName]
+          loadingRoutes = {}
+          sectionChunk.routes.forEach( item => {
+            loadingRoutes[item] = item;
+          })
+        }
+
         var chunkScreens = {}
+          for(const routeName in loadingRoutes) {
+            const route = chunk.routes[routeName]
+            const screenProps = Object.assign({
+              transitions: route.transitions,
+              theme: this.props.theme
+            }, route.props || {})
+            var screen = (props) => <route.screen {...props} {...screenProps}/>
+            const path = `${chunkName}/${routeName}`
+            const navigationOptions = {
+              title: route.title,
+              header: {
+                visible: !route.hideHeader,
+                tintColor: Styles.styleColor(this.props.theme.tintColor || "#FFFFFF"),
+                style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
+              }
 
-        for(const routeName in chunk.routes) {
-          const route = chunk.routes[routeName]
-          const screenProps = Object.assign({
-            transitions: route.transitions,
-            theme: this.props.theme
-          }, route.props || {}, chunk.selectors || {}, chunk.assets || {})
-          var screen = (props) => <route.screen {...props} {...screenProps}/>
-          const path = `${chunkName}/${routeName}`
-          const navigationOptions = {
-            title: route.title,
-            header: {
-              visible: !route.hideHeader,
-              tintColor: Styles.styleColor(this.props.theme.tintColor || "#FFFFFF"),
-              style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
+            }
+
+            if (route.hideBack) {
+              navigationOptions.header.left = () => {}
+            }
+
+            if (layout === 'tabs') {
+              navigationOptions.tabBar = {
+                label: route.title,
+                icon: <Image source={chunk.assets.icon}/>
+              }
+              chunkScreens[path] = { screen, navigationOptions }
+            } else {
+              screens[path] = { screen, navigationOptions}
             }
           }
 
-          if (route.hideBack) {
-            navigationOptions.header.left = () => {}
+          if (Object.keys(chunkScreens).length > 0) {
+            screens[`${index}_${chunkName}`] = { screen: StackNavigator(chunkScreens), navigationOptions: {
+              header: {
+                style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
+                left: () => {},
+                style: { height: 0 }
+              }
+            }}
           }
-
-          if (layout === 'tabs') {
-            navigationOptions.tabBar = {
-              label: route.title,
-              icon: <Image source={chunk.assets.icon}/>
-            }
-            chunkScreens[path] = { screen, navigationOptions }
-          } else {
-            screens[path] = { screen, navigationOptions}
-          }
-        }
-
-        if (Object.keys(chunkScreens).length > 0) {
-          screens[chunkName] = { screen: StackNavigator(chunkScreens), navigationOptions: {
-            header: {
-              style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
-              left: () => {},
-              style: { height: 0 }
-            }
-          }}
-        }
       })
 
       this._navigator = this._navigator || {}
