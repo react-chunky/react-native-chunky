@@ -49,6 +49,7 @@ export default class App extends Component {
                 tintColor: Styles.styleColor(this.props.theme.tintColor || "#FFFFFF"),
                 style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
               }
+
             }
 
             if (route.hideBack) {
