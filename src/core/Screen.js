@@ -8,6 +8,7 @@ export default class Screen extends Core.Screen {
   constructor(props) {
     super(props)
 
+    console.log(props)
     this.state = { triggered: false }
   }
 

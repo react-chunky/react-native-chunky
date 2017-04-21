@@ -1,6 +1,6 @@
 import { StackNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'
 import React, { PureComponent } from 'react'
-import { Image } from 'react-native'
+import { Image, Platform } from 'react-native'
 import { Styles } from 'react-chunky'
 
 /**
@@ -19,8 +19,14 @@ export default class App extends PureComponent {
   constructor(props) {
     super(props)
 
-    // As soon as this App is instantiated, we want to initialize the sections
-    this._initializeSections()
+    // As soon as this App is instantiated, we want to generate the sections
+    const sections = this._createSections()
+
+    // Let's create the main app navigator
+    const navigator = this._createAppNavigator(sections)
+
+    // We're ready to keep track of our app sections and navigator
+    this.state = { sections, navigator }
   }
 
   // createNavigationOptions(route, layout, assets) {
@@ -59,35 +65,17 @@ export default class App extends PureComponent {
   //     }
   //   }
   // }
-  //
-  // createSectionChunk(sectionChunk) {
-  //   let chunk, loadingRoutes, chunkName
-  //
-  //   if ( typeof sectionChunk === 'string' ) {
-  //     chunkName = sectionChunk
-  //     chunk = this.props.chunks[chunkName]
-  //     loadingRoutes = chunk.routes
-  //   } else if ( typeof sectionChunk === 'object' ) {
-  //     chunkName = sectionChunk.chunk
-  //     chunk = this.props.chunks[chunkName]
-  //     loadingRoutes = {}
-  //     sectionChunk.routes.forEach( item => {
-  //       loadingRoutes[item] = item;
-  //     })
-  //   }
-  // }
-
-  _createSectionNavigatorRoute(route) {
-    // console.log(route)
-  }
 
   _createSectionNavigatorRoutes(element) {
     // We want to look at a stack element and figure out its parent chunk;
     // Note that chunks may also have flavours so this looks for the flavor, if any
     const [ chunkName, chunkFlavorName ] = element.split("/")
 
-    if (!this.props.chunks[chunkName]) {
-      // We've got a chunk name so let's verify that it actually points to a real chunk
+    // This is our chunk, if it actually exists
+    const chunk = this.props.chunks[chunkName]
+
+    if (!chunk) {
+      // Let's verify that it actually points to a real chunk
       return
     }
 
@@ -104,27 +92,37 @@ export default class App extends PureComponent {
       return
     }
 
-    // for (let routeName in chunk.routes) {
-    //   var route = chunkRoutes[routeName]
-    //   route.routeName = routeName
-    //   // this.createSectionNavigatorRoute(route)
-    // }
+    // These routes will be the ones we want to parse out of the chunk, as necessary
+    var routes = {}
 
-    // chunkRoutes.map(route => {
-      // console.log(route)
-    // })
-    // return Object.assign({chunkName, iconName}, chunkFlavor ? { chunkFlavor } : {})
+    for (let routeName in chunk.routes) {
+      // Great, this chunk has routes, let's look through all of them
+      var route = chunk.routes[routeName]
+
+      const screenProps = Object.assign({
+        transitions: route.transitions,
+        theme: this.props.theme
+      }, route.props || {})
+      const screen = (props) => <route.screen {...props} {...screenProps}/>
+
+      routes[routeName] = { screen }
+    }
+
+    // We've got ourselves some routes so we should be done with this
+    return routes
   }
 
   _createSectionNavigator(section) {
-    // Have a look at the given section and parse the layout, stack and the name
-    const layout = section.layout || "default"
-    const stack = section.stack || []
-    const sectionName = section.sectionName || "default"
+    if (!section || !section.stack) {
+      // We don't even considers stackless sections
+      return
+    }
+
+    // These are the routes that we need to compile for this section's navigator
     var routes = {}
 
     // Let's look through the stack and build some routes for this section's navigator
-    stack.forEach(element => {
+    section.stack.forEach(element => {
       if (element && typeof element === 'string') {
         // The first kind of element in the sack is a plain string, that signifies a chunk
         routes = Object.assign({}, routes, this._createSectionNavigatorRoutes(element))
@@ -140,103 +138,75 @@ export default class App extends PureComponent {
       }
     })
 
-    console.log(sectionName, routes)
-    // const navigator =
-    // switch(layout) {
-    //     case 'tabs':
-    //       navigators = Object.assign({}, navigators, { [sectionName]: { screen: TabNavigator(screens) }})
-    //       break
-    //     case 'drawer':
-    //       navigators = Object.assign({}, navigators, { [sectionName]: { screen: DrawerNavigator(screens) }})
-    //       break;
-    //     default:
-    //       navigators = Object.assign({}, navigators, screens)
-    //       break;
-    //   }
-    // return StackNavigator(routes)
-  }
+    // Compile a list of options for this section's navigator
+    const navigatorConfig = {
+      headerMode: (section.header.hide ? 'none' : (Platform.OS === 'ios' ? 'float' : 'screen')),
+      navigationOptions: {
+        header: {
+          tintColor: Styles.styleColor(this.props.theme.navigationTintColor),
+          style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
+          left: () => {},
+          right: () => {}
+        }
+      }
+    }
 
-  _initializeSections() {
-    for(const sectionName in this.props.sections) {
-      // Look through all the app's sections and for each, build a navigator
-      var section = this.props.sections[sectionName]
-      section.sectionName = sectionName
-      const navigator = this._createSectionNavigator(section)
+    // We're ready to build the navigation, based on the routes we've compiled
+    switch(section.layout) {
+      case 'tabs':
+        return TabNavigator(routes, navigatorConfig)
+      case 'drawer':
+        return DrawerNavigator(routes, navigatorConfig)
+      default:
+        return StackNavigator(routes, navigatorConfig)
     }
   }
 
-  // init() {
-  //   var navigators = {}
-  //   for(const sectionName in this.props.sections) {
-  //     const section = this.props.sections[sectionName]
-  //     const layout = section.layout || "default"
-  //     var screens = {}
-  //     let chunk, loadingRoutes, chunkName
-  //
-  //     section.chunks.forEach( (sectionChunk, index) => {
-  //
-  //       if ( typeof sectionChunk === 'string' ) {
-  //         chunkName = sectionChunk
-  //         chunk = this.props.chunks[chunkName]
-  //         loadingRoutes = chunk.routes
-  //       } else if ( typeof sectionChunk === 'object' ) {
-  //         chunkName = sectionChunk.chunk
-  //         chunk = this.props.chunks[chunkName]
-  //         loadingRoutes = {}
-  //         sectionChunk.routes.forEach( item => {
-  //           loadingRoutes[item] = item;
-  //         })
-  //       }
-  //
-  //       var chunkScreens = {}
-  //
-  //         for(const routeName in loadingRoutes) {
-  //
-  //           const route = chunk.routes[routeName]
-  //           const screenProps = Object.assign({
-  //             transitions: route.transitions,
-  //             theme: this.props.theme
-  //           }, route.props || {})
-  //           var screen = (props) => <route.screen {...props} {...screenProps}/>
-  //           const path = `${chunkName}/${routeName}`
-  //
-  //           const navigationOptions = this.createNavigationOptions(route, layout, chunk.assets)
-  //
-  //           if (layout === 'tabs') {
-  //             chunkScreens[path] = { screen, navigationOptions }
-  //           } else {
-  //             screens[path] = { screen, navigationOptions}
-  //           }
-  //         }
-  //
-  //         if (Object.keys(chunkScreens).length > 0) {
-  //           screens[`${index}_${chunkName}`] = this.createScreenStack(chunkScreens)
-  //         }
-  //     })
-  //
-  //     this._navigator = this._navigator || {}
-  //     switch(layout) {
-  //       case 'tabs':
-  //         navigators = Object.assign({}, navigators, { [sectionName]: { screen: TabNavigator(screens) }})
-  //         break
-  //       case 'drawer':
-  //         navigators = Object.assign({}, navigators, { [sectionName]: { screen: DrawerNavigator(screens) }})
-  //         break;
-  //       default:
-  //         navigators = Object.assign({}, navigators, screens)
-  //         break;
-  //     }
-  //   }
-  //
-  //   this._navigator = StackNavigator(navigators)
-  // }
+  _createSections() {
+    // These are the sections we want to generate and initialize
+    var sections = {}
 
-  get navigator() {
-    return this._navigator
+    for(const sectionName in this.props.sections) {
+      // Look through all the app's sections and for each, build defaults if necessary
+      var section = this.props.sections[sectionName]
+      section.name = sectionName
+      section.layout = section.layout || "default"
+      section.header = section.header || { hide: false }
+
+      // Let's also generate a navigator for this section
+      section.navigator = this._createSectionNavigator(section)
+
+      if (!section.navigator) {
+        // We want to skip sections without navigators
+        continue
+      }
+
+      // Let's keep track of all the resolved sections
+      sections[sectionName] = section
+    }
+
+    // And here are all our valid app sections
+    return sections
+  }
+
+  _createAppNavigator(sections) {
+    // We will use the section navigators to compose the main app navigator
+    var subNavigators = {}
+
+    for (let name in sections) {
+      // We want to look through all the sections and pull out each section navigator
+      const section = sections[name]
+      subNavigators[name] = { screen: section.navigator }
+    }
+
+    // Let's put them all together into a headerless stack navigator
+    return StackNavigator(subNavigators, {
+      headerMode: 'none'
+    })
   }
 
   render() {
-    const Content = this.navigator
-    return <Content/>
+    const AppNavigator = this.state.navigator
+    return <AppNavigator/>
   }
 }
