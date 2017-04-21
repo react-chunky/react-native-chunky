@@ -22,7 +22,7 @@
   "homepage": "https://github.com/react-chunky/react-native-chunky",
   "dependencies": {
     "react-chunky": "0.x",
-    "react-navigation": "^1.0.0-beta.6"
+    "react-navigation": "^1.0.0-beta.8"
   },
   "devDependencies": {
     "react-native-savor": "0.x"

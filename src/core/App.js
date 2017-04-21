@@ -103,9 +103,20 @@ export default class App extends PureComponent {
         transitions: route.transitions,
         theme: this.props.theme
       }, route.props || {})
+
       const screen = (props) => <route.screen {...props} {...screenProps}/>
 
-      routes[routeName] = { screen }
+      const navigationOptions = {
+        title: route.title || "",
+        header: {
+          tintColor: Styles.styleColor(this.props.theme.navigationTintColor),
+          style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
+          left: () => {},
+          right: () => {}
+        }
+      }
+
+      routes[routeName] = { screen, navigationOptions }
     }
 
     // We've got ourselves some routes so we should be done with this
@@ -140,15 +151,7 @@ export default class App extends PureComponent {
 
     // Compile a list of options for this section's navigator
     const navigatorConfig = {
-      headerMode: (section.header.hide ? 'none' : (Platform.OS === 'ios' ? 'float' : 'screen')),
-      navigationOptions: {
-        header: {
-          tintColor: Styles.styleColor(this.props.theme.navigationTintColor),
-          style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
-          left: () => {},
-          right: () => {}
-        }
-      }
+      headerMode: (section.hideHeader ? 'none' : (Platform.OS === 'ios' ? 'float' : 'screen'))
     }
 
     // We're ready to build the navigation, based on the routes we've compiled
