@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/core/ListScreen.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/react-chunky/react-native-chunky" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">core</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/ListScreen.js~ListScreen.html">ListScreen</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/core/Screen.js~Screen.html">Screen</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">errors</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-UNABLE_TO_LOAD_ROUTE">UNABLE_TO_LOAD_ROUTE</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">styles</div><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-containers">containers</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/core/ListScreen.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import React, { Component } from &apos;react&apos;
+import {
+  Image,
+  StyleSheet,
+  View,
+  Text,
+  ListView,
+  ActivityIndicator,
+  TouchableOpacity,
+  Button
+} from &apos;react-native&apos;
+import * as Styles from &apos;../styles&apos;
+import Screen from &apos;./Screen&apos;
+
+export default class ListScreen extends Screen {
+
+  constructor(props) {
+    super(props)
+    this._onRetryPressed = this.onRetryPressed.bind(this)
+    const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) =&gt; r1 !== r2 })
+    this.state = { dataSource }
+  }
+
+  retrieveData() {
+
+  }
+
+  hasError() {
+    return false
+  }
+
+  hasData() {
+    return false
+  }
+
+  detailsTransitionId() {
+    return &apos;details&apos;
+  }
+
+  renderRow(data) {
+    return (&lt;View style={this.styles.containers.listRow}&gt;
+      &lt;Text&gt; List Row &lt;/Text&gt;
+    &lt;/View&gt;)
+  }
+
+  onRetryPressed() {
+    this.retrieveData()
+  }
+
+  componentDidMount() {
+    this.retrieveData()
+  }
+
+  renderError(error) {
+    return (&lt;View style={this.styles.containers.main}&gt;
+      &lt;Text&gt; { error.message } &lt;/Text&gt;
+        &lt;Button
+          onPress={this._onRetryPressed}
+          title=&quot;Retry&quot;
+        /&gt;
+      &lt;/View&gt;)
+  }
+
+  renderProgress() {
+    return (&lt;View style={this.styles.containers.main}&gt;
+      &lt;ActivityIndicator
+        animating={true}
+        style={{height: 120}}
+        size=&quot;small&quot;/&gt;
+    &lt;/View&gt;)
+  }
+
+  renderListRow(data) {
+    return (
+      &lt;TouchableOpacity onPress={this.onRowPressed.bind(this, data)}&gt;
+        { this.renderRow (data) }
+      &lt;/TouchableOpacity&gt;)
+  }
+
+  renderRowSeparator(sectionId, rowId){
+    return (&lt;View key={rowId} style={this.styles.containers.listRowSeparator}/&gt;)
+  }
+
+  reposDataOnChanged(old, data) {
+    this.setState({ dataSource: this.state.dataSource.cloneWithRows(data)})
+  }
+
+  onRowPressed(data) {
+    this.triggerTransition(this.detailsTransitionId(), { data })
+  }
+
+  renderData() {
+    return (&lt;View style={this.styles.containers.main}&gt;
+      &lt;ListView style={this.styles.containers.list}
+          dataSource={this.state.dataSource}
+          renderRow={this.renderListRow.bind(this)}
+          renderSeparator={this.renderRowSeparator.bind(this)}/&gt;
+    &lt;/View&gt;)
+  }
+
+  render() {
+    if (this.hasError()) {
+      return this.renderError()
+    }
+
+    if (this.hasData()) {
+      return this.renderData()
+    }
+
+    return this.renderProgress()
+  }
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

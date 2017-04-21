@@ -1,0 +1,64 @@
+{
+  "coverage": "6.89%",
+  "expectCount": 29,
+  "actualCount": 2,
+  "files": {
+    "src/core/App.js": {
+      "expectCount": 4,
+      "actualCount": 2,
+      "undocumentLines": [
+        216,
+        220
+      ]
+    },
+    "src/core/ListScreen.js": {
+      "expectCount": 18,
+      "actualCount": 0,
+      "undocumentLines": [
+        15,
+        50,
+        17,
+        36,
+        32,
+        28,
+        46,
+        88,
+        101,
+        92,
+        54,
+        73,
+        64,
+        40,
+        80,
+        84,
+        24,
+        21
+      ]
+    },
+    "src/core/Screen.js": {
+      "expectCount": 5,
+      "actualCount": 0,
+      "undocumentLines": [
+        6,
+        8,
+        11,
+        14,
+        20
+      ]
+    },
+    "src/errors/generic.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        4
+      ]
+    },
+    "src/styles/containers.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        6
+      ]
+    }
+  }
+}

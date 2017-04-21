@@ -17,7 +17,7 @@ export default class Screen extends Core.Screen {
     }
   }
 
-  triggerTransition (name) {
+  triggerTransition (name, data) {
     if (this.state.triggered || !this.props.transitions || !this.props.transitions[name]) {
       return
     }
@@ -27,7 +27,7 @@ export default class Screen extends Core.Screen {
     if (transition.replace) {
       this.setState({ triggered: true })
     }
-    
-    this.props.navigation.navigate(transition.id)
+
+    this.props.navigation.navigate(transition.id, data)
   }
 }
