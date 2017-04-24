@@ -29,7 +29,7 @@ export default class App extends PureComponent {
     this.state = { sections, navigator }
   }
 
-  _createSectionNavigatorRoutes(element) {
+  _createSectionNavigatorRoutes(element, section) {
     // We want to look at a stack element and figure out its parent chunk;
     // Note that chunks may also have flavours so this looks for the flavor, if any
     const [ chunkName, chunkFlavorName ] = element.split("/")
@@ -62,14 +62,41 @@ export default class App extends PureComponent {
       // Great, this chunk has routes, let's look through all of them
       var route = chunk.routes[routeName]
 
+      // Let's build up the transitions, if any
+      var transitions = {}
+
+      if (chunk.transitions) {
+        for (let transitionName in chunk.transitions) {
+          var transition = chunk.transitions[transitionName]
+
+          if (transition.route) {
+            // This is a local transition, so let's resolve locally
+            transitions[transitionName] = Object.assign({}, transition, { route: `${section.name}/${chunkName}/${transition.route}` })
+            continue
+          }
+
+          // This looks like a valid global transition
+          transition = this.props.transitions[transitionName]
+
+          if (!transition) {
+            // This transition is unknown
+            continue
+          }
+
+          // Keep track of the global transition
+          transitions[transitionName] = Object.assign({}, transition)
+        }
+      }
+
+      // Let's pass over the theme as well
+      const theme = this.props.theme
+
       // For each route, we want to compose its properties
-      const screenProps = Object.assign({
-        transitions: route.transitions,
-        theme: this.props.theme
-      }, route.props || {})
+      const screenProps = Object.assign({ theme, transitions }, route.props || {})
 
       // Now that we have properties, we're ready to initialize the route's screen
-      const screen = (props) => <route.screen {...props} {...screenProps}/>
+      const RouteScreen = route.screen
+      const Screen = (props) => <RouteScreen {...props} {...screenProps}/>
 
       // Before we keep track of the screen inside our navigator, we need some navigation options
       const navigationOptions = {
@@ -83,7 +110,7 @@ export default class App extends PureComponent {
       }
 
       // Good, so let's add this route to the navigator
-      routes[routeName] = { screen, navigationOptions }
+      routes[`${section.name}/${chunkName}/${routeName}`] = { screen: Screen, navigationOptions }
     }
 
     // We've got ourselves some routes so we should be done with this
@@ -103,14 +130,14 @@ export default class App extends PureComponent {
     section.stack.forEach(element => {
       if (element && typeof element === 'string') {
         // The first kind of element in the sack is a plain string, that signifies a chunk
-        routes = Object.assign({}, routes, this._createSectionNavigatorRoutes(element))
+        routes = Object.assign({}, routes, this._createSectionNavigatorRoutes(element, section))
         return
       }
 
       if (element &&  Array.isArray(element) && element.length > 0) {
         // Another type of element in the sack is a list of strings, that each signifies a chunk
         element.forEach(subElement => {
-          routes = Object.assign({}, routes, this._createSectionNavigatorRoutes(subElement))
+          routes = Object.assign({}, routes, this._createSectionNavigatorRoutes(subElement, section))
         })
         return
       }
@@ -141,7 +168,6 @@ export default class App extends PureComponent {
       var section = this.props.sections[sectionName]
       section.name = sectionName
       section.layout = section.layout || "default"
-      section.header = section.header || { hide: false }
 
       // Let's also generate a navigator for this section
       section.navigator = this._createSectionNavigator(section)

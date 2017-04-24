@@ -19,9 +19,11 @@ export default class Screen extends Core.Screen {
 
   triggerTransition (name, data) {
     if (this.state.triggered || !this.props.transitions || !this.props.transitions[name]) {
+      // We already transitioned, or this is an unknown transition
       return
     }
 
+    // This is the transition we're looking for
     const transition = this.props.transitions[name]
 
     if (!transition.route) {
@@ -30,9 +32,11 @@ export default class Screen extends Core.Screen {
     }
 
     if (transition.replace) {
+      // We're replacing the previous route with this one
       this.setState({ triggered: true })
     }
 
-    this.props.navigation.navigate(transition.id, data)
+    // Let's actually perform the transition to the new route
+    this.props.navigation.navigate(transition.route, data)
   }
 }
