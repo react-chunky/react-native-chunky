@@ -1,6 +1,6 @@
 import { StackNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'
 import React, { PureComponent } from 'react'
-import { Image, Platform } from 'react-native'
+import { Image, Platform, Button } from 'react-native'
 import { Styles } from 'react-chunky'
 
 /**
@@ -98,14 +98,12 @@ export default class App extends PureComponent {
       const RouteScreen = route.screen
       const Screen = (props) => <RouteScreen {...props} {...screenProps}/>
 
-      // Before we keep track of the screen inside our navigator, we need some navigation options
+      // // Before we keep track of the screen inside our navigator, we need some navigation options
       const navigationOptions = {
         title: route.title || "",
         header: {
           tintColor: Styles.styleColor(this.props.theme.navigationTintColor),
-          style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
-          left: () => {},
-          right: () => {}
+          style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) }
         }
       }
 
@@ -113,6 +111,8 @@ export default class App extends PureComponent {
       routes[`${section.name}/${chunkName}/${routeName}`] = { screen: Screen, navigationOptions }
     }
 
+    console.log(routes)
+    
     // We've got ourselves some routes so we should be done with this
     return routes
   }
@@ -148,19 +148,19 @@ export default class App extends PureComponent {
         headerMode: (section.hideHeader ? 'none' : (Platform.OS === 'ios' ? 'float' : 'screen'))
       }
 
-      routes[`${section.name}/${elementIndex}`] = { screen: StackNavigator(elementRoutes, navigatorConfig), navigatorConfig: { headerMode: 'none' } }
+      routes[`${section.name}/${elementIndex}`] = { screen: StackNavigator(elementRoutes, navigatorConfig) }
       elementIndex = elementIndex + 1
     })
 
-    // We're ready to build the navigation, based on the routes we've compiled
-    switch(section.layout) {
-      case 'tabs':
-        return TabNavigator(routes, { headerMode: 'none' })
-      case 'drawer':
-        return DrawerNavigator(routes, { headerMode: 'none' })
-      default:
-        return StackNavigator(routes, { headerMode: 'none' })
+    if (section.layout === "drawer") {
+      return DrawerNavigator(routes, { headerMode: 'none' })
     }
+
+    if (section.layout === "tabs") {
+      return TabNavigator(routes, { headerMode: 'none', animationEnabled: false })
+    }
+
+    return StackNavigator(routes, { headerMode: 'none' })
   }
 
   _createSections() {
@@ -200,9 +200,7 @@ export default class App extends PureComponent {
     }
 
     // Let's put them all together into a headerless stack navigator
-    return StackNavigator(subNavigators, {
-      headerMode: 'none'
-    })
+    return StackNavigator(subNavigators, { headerMode: 'none' })
   }
 
   render() {

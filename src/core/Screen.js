@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Button } from 'react-native'
 import { Core } from 'react-chunky'
 import * as DefaultStyles from '../styles'
 
