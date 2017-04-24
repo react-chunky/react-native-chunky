@@ -8,7 +8,6 @@ export default class Screen extends Core.Screen {
   constructor(props) {
     super(props)
 
-    console.log(props)
     this.state = { triggered: false }
   }
 
@@ -24,6 +23,11 @@ export default class Screen extends Core.Screen {
     }
 
     const transition = this.props.transitions[name]
+
+    if (!transition.route) {
+      // This transition does not have a route, so forget about it
+      return
+    }
 
     if (transition.replace) {
       this.setState({ triggered: true })

@@ -29,43 +29,6 @@ export default class App extends PureComponent {
     this.state = { sections, navigator }
   }
 
-  // createNavigationOptions(route, layout, assets) {
-  //   var options = {
-  //     title: route.title,
-  //     header: {
-  //       visible: !route.hideHeader,
-  //       tintColor: Styles.styleColor(this.props.theme.tintColor || "#FFFFFF"),
-  //       style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
-  //     }
-  //   }
-  //
-  //   if (route.hideBack) {
-  //     options.header.left = () => {}
-  //   }
-  //
-  //   if (layout === 'tabs') {
-  //     options.tabBar = {
-  //       label: route.title,
-  //       icon: <Image source={assets.icon}/>
-  //     }
-  //   }
-  //
-  //   return options
-  // }
-  //
-  // createScreenStack(screens) {
-  //   return {
-  //     screen: StackNavigator(screens),
-  //     navigationOptions: {
-  //       header: {
-  //         style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
-  //         left: () => {},
-  //         style: { height: 0 }
-  //       }
-  //     }
-  //   }
-  // }
-
   _createSectionNavigatorRoutes(element) {
     // We want to look at a stack element and figure out its parent chunk;
     // Note that chunks may also have flavours so this looks for the flavor, if any
@@ -99,13 +62,16 @@ export default class App extends PureComponent {
       // Great, this chunk has routes, let's look through all of them
       var route = chunk.routes[routeName]
 
+      // For each route, we want to compose its properties
       const screenProps = Object.assign({
         transitions: route.transitions,
         theme: this.props.theme
       }, route.props || {})
 
+      // Now that we have properties, we're ready to initialize the route's screen
       const screen = (props) => <route.screen {...props} {...screenProps}/>
 
+      // Before we keep track of the screen inside our navigator, we need some navigation options
       const navigationOptions = {
         title: route.title || "",
         header: {
@@ -116,6 +82,7 @@ export default class App extends PureComponent {
         }
       }
 
+      // Good, so let's add this route to the navigator
       routes[routeName] = { screen, navigationOptions }
     }
 
@@ -209,6 +176,7 @@ export default class App extends PureComponent {
   }
 
   render() {
+    // The only element we need to render here is the main app navigator
     const AppNavigator = this.state.navigator
     return <AppNavigator/>
   }
