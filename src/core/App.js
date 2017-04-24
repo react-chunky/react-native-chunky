@@ -127,35 +127,39 @@ export default class App extends PureComponent {
     var routes = {}
 
     // Let's look through the stack and build some routes for this section's navigator
+    var elementIndex = 0
     section.stack.forEach(element => {
+      var elementRoutes = {}
+
       if (element && typeof element === 'string') {
         // The first kind of element in the sack is a plain string, that signifies a chunk
-        routes = Object.assign({}, routes, this._createSectionNavigatorRoutes(element, section))
-        return
-      }
-
-      if (element &&  Array.isArray(element) && element.length > 0) {
+        elementRoutes = Object.assign({}, elementRoutes, this._createSectionNavigatorRoutes(element, section))
+      } else if (element &&  Array.isArray(element) && element.length > 0) {
         // Another type of element in the sack is a list of strings, that each signifies a chunk
+        var composedRoutes = {}
         element.forEach(subElement => {
-          routes = Object.assign({}, routes, this._createSectionNavigatorRoutes(subElement, section))
+          composedRoutes = Object.assign({}, composedRoutes, this._createSectionNavigatorRoutes(subElement, section))
         })
-        return
+        elementRoutes = Object.assign({}, elementRoutes, composedRoutes)
       }
-    })
 
-    // Compile a list of options for this section's navigator
-    const navigatorConfig = {
-      headerMode: (section.hideHeader ? 'none' : (Platform.OS === 'ios' ? 'float' : 'screen'))
-    }
+      // Compile a list of options for this section's navigator
+      const navigatorConfig = {
+        headerMode: (section.hideHeader ? 'none' : (Platform.OS === 'ios' ? 'float' : 'screen'))
+      }
+
+      routes[`${section.name}/${elementIndex}`] = { screen: StackNavigator(elementRoutes, navigatorConfig), navigatorConfig: { headerMode: 'none' } }
+      elementIndex = elementIndex + 1
+    })
 
     // We're ready to build the navigation, based on the routes we've compiled
     switch(section.layout) {
       case 'tabs':
-        return TabNavigator(routes, navigatorConfig)
+        return TabNavigator(routes, { headerMode: 'none' })
       case 'drawer':
-        return DrawerNavigator(routes, navigatorConfig)
+        return DrawerNavigator(routes, { headerMode: 'none' })
       default:
-        return StackNavigator(routes, navigatorConfig)
+        return StackNavigator(routes, { headerMode: 'none' })
     }
   }
 
