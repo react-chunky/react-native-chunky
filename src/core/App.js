@@ -1,6 +1,6 @@
-import { StackNavigator, TabNavigator, DrawerNavigator } from 'react-navigation'
+import { StackNavigator, TabNavigator, DrawerNavigator, DrawerView } from 'react-navigation'
 import React, { PureComponent } from 'react'
-import { Image, Platform, Button } from 'react-native'
+import { Image, Platform, Button, ScrollView } from 'react-native'
 import { Styles } from 'react-chunky'
 
 /**
@@ -111,8 +111,6 @@ export default class App extends PureComponent {
       routes[`${section.name}/${chunkName}/${routeName}`] = { screen: Screen, navigationOptions }
     }
 
-    console.log(routes)
-    
     // We've got ourselves some routes so we should be done with this
     return routes
   }
@@ -137,9 +135,7 @@ export default class App extends PureComponent {
       } else if (element &&  Array.isArray(element) && element.length > 0) {
         // Another type of element in the sack is a list of strings, that each signifies a chunk
         var composedRoutes = {}
-        element.forEach(subElement => {
-          composedRoutes = Object.assign({}, composedRoutes, this._createSectionNavigatorRoutes(subElement, section))
-        })
+        element.forEach(subElement => { composedRoutes = Object.assign({}, composedRoutes, this._createSectionNavigatorRoutes(subElement, section)) })
         elementRoutes = Object.assign({}, elementRoutes, composedRoutes)
       }
 
@@ -153,14 +149,31 @@ export default class App extends PureComponent {
     })
 
     if (section.layout === "drawer") {
-      return DrawerNavigator(routes, { headerMode: 'none' })
+      return DrawerNavigator(routes, {
+        drawerWidth: 300,
+        drawerPosition: 'left',
+        contentOptions: {
+          activeTintColor: Styles.styleColor(this.props.theme.navigationTintColor),
+          inactiveTintColor: Styles.styleColor(this.props.theme.navigationTintColor),
+          style: {
+            marginVertical: 0,
+            backgroundColor:  Styles.styleColor(this.props.theme.navigationColor)
+          }
+        },
+        contentComponent: props => <ScrollView style={{ backgroundColor: Styles.styleColor(this.props.theme.navigationColor) }}><DrawerView.Items {...props} /></ScrollView>
+      })
     }
 
     if (section.layout === "tabs") {
-      return TabNavigator(routes, { headerMode: 'none', animationEnabled: false })
+      return TabNavigator(routes, {
+        headerMode: 'none',
+        animationEnabled: false
+      })
     }
 
-    return StackNavigator(routes, { headerMode: 'none' })
+    return StackNavigator(routes, {
+      headerMode: 'none',
+    })
   }
 
   _createSections() {

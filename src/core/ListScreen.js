@@ -86,7 +86,8 @@ export default class ListScreen extends Screen {
   }
 
   onRowPressed(data) {
-    this.triggerTransition(this.detailsTransitionId(), { data })
+    this.props.navigation.navigate("DrawerOpen")
+    // this.triggerTransition(this.detailsTransitionId(), { data })
   }
 
   renderData() {
