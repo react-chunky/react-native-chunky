@@ -1,5 +1,6 @@
 import { StackNavigator, TabNavigator, DrawerNavigator, DrawerView } from 'react-navigation'
 import React, { PureComponent } from 'react'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { Image, Platform, Button, ScrollView } from 'react-native'
 import { Styles } from 'react-chunky'
 
@@ -58,9 +59,15 @@ export default class App extends PureComponent {
     // These routes will be the ones we want to parse out of the chunk, as necessary
     var routes = {}
 
+    var rootRoute = true
     for (let routeName in chunk.routes) {
       // Great, this chunk has routes, let's look through all of them
       var route = chunk.routes[routeName]
+
+      if (rootRoute) {
+        route.root = true
+        rootRoute = false
+      }
 
       // Let's build up the transitions, if any
       var transitions = {}
@@ -98,21 +105,37 @@ export default class App extends PureComponent {
       const RouteScreen = route.screen
       const Screen = (props) => <RouteScreen {...props} {...screenProps}/>
 
-      // // Before we keep track of the screen inside our navigator, we need some navigation options
-      const navigationOptions = {
-        title: route.title || "",
-        header: {
-          tintColor: Styles.styleColor(this.props.theme.navigationTintColor),
-          style: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) }
-        }
-      }
-
       // Good, so let's add this route to the navigator
-      routes[`${section.name}/${chunkName}/${routeName}`] = { screen: Screen, navigationOptions }
+      routes[`${section.name}/${chunkName}/${routeName}`] = { screen: Screen, navigationOptions: this._createRouteNavigationOptions(section, route) }
     }
 
     // We've got ourselves some routes so we should be done with this
     return routes
+  }
+
+  _createRouteNavigationOptions(section, route) {
+    // Construct a top left menu button, if necessary
+    const headerLeft = (navigation) => {
+      if (section.layout === 'drawer' && route.root) {
+        return (<MaterialIcons.Button name="menu" size={28} backgroundColor={Styles.styleColor(this.props.theme.navigationColor)} onPress={() => { navigation.navigate("DrawerOpen") }}/> )
+      }
+
+      if (!route.root) {
+        return (<MaterialIcons.Button name="navigate-before" size={28} backgroundColor={Styles.styleColor(this.props.theme.navigationColor)} onPress={() => { navigation.goBack() }}/> )
+      }
+
+      return
+    }
+
+    // Before we keep track of the screen inside our navigator, we need some navigation options
+    return ({ navigation }) => {
+      return {
+        title: route.title || "",
+        headerTintColor: Styles.styleColor(this.props.theme.navigationTintColor),
+        headerStyle: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
+        headerLeft: headerLeft(navigation)
+      }
+    }
   }
 
   _createSectionNavigator(section) {

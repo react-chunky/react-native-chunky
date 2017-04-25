@@ -22,6 +22,7 @@
   "homepage": "https://github.com/react-chunky/react-native-chunky",
   "dependencies": {
     "react-chunky": "0.x",
+    "react-native-vector-icons": "^4.0.1",
     "react-navigation": "^1.0.0-beta.8"
   },
   "devDependencies": {

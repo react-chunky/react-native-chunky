@@ -82,12 +82,15 @@ export default class ListScreen extends Screen {
   }
 
   reposDataOnChanged(old, data) {
+    if (!data) {
+      // Forget invalid data fetches
+      return
+    }
     this.setState({ dataSource: this.state.dataSource.cloneWithRows(data)})
   }
 
   onRowPressed(data) {
-    this.props.navigation.navigate("DrawerOpen")
-    // this.triggerTransition(this.detailsTransitionId(), { data })
+    this.triggerTransition(this.detailsTransitionId(), { data })
   }
 
   renderData() {
