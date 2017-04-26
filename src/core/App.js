@@ -189,13 +189,12 @@ export default class App extends PureComponent {
 
     if (section.layout === "tabs") {
       return TabNavigator(routes, {
-        headerMode: 'none',
-        animationEnabled: false
+        headerMode: 'none'
       })
     }
 
     return StackNavigator(routes, {
-      headerMode: 'none',
+      headerMode: 'none'
     })
   }
 
