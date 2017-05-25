@@ -1,6 +1,6 @@
 {
   "name": "react-native-chunky",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "The Full Stack React Framework",
   "scripts": {
     "test": "react-native-savor test",
@@ -8,7 +8,7 @@
     "codeclimate": "react-native-savor codeclimate"
   },
   "bin": {
-    "react-native-chunky:start": "bin/start.js"
+    "react-native-chunky:start": "node bin/start.js"
   },
   "repository": {
     "type": "git",
