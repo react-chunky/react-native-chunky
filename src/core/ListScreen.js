@@ -6,9 +6,9 @@ import {
   Text,
   ListView,
   ActivityIndicator,
-  TouchableOpacity,
   Button
 } from 'react-native'
+import { List, ListItem } from 'react-native-elements'
 import * as Styles from '../styles'
 import Screen from './Screen'
 
@@ -35,12 +35,6 @@ export default class ListScreen extends Screen {
 
   detailsTransitionId() {
     return 'details'
-  }
-
-  renderRow(data) {
-    return (<View style={this.styles.containers.listRow}>
-      <Text> List Row </Text>
-    </View>)
   }
 
   onRetryPressed() {
@@ -70,17 +64,6 @@ export default class ListScreen extends Screen {
     </View>)
   }
 
-  renderListRow(data) {
-    return (
-      <TouchableOpacity onPress={this.onRowPressed.bind(this, data)}>
-        { this.renderRow (data) }
-      </TouchableOpacity>)
-  }
-
-  renderRowSeparator(sectionId, rowId){
-    return (<View key={rowId} style={this.styles.containers.listRowSeparator}/>)
-  }
-
   reposDataOnChanged(old, data) {
     if (!data) {
       // Forget invalid data fetches
@@ -89,17 +72,26 @@ export default class ListScreen extends Screen {
     this.setState({ dataSource: this.state.dataSource.cloneWithRows(data)})
   }
 
-  onRowPressed(data) {
+  onItemPressed(data, section) {
     this.triggerTransition(this.detailsTransitionId(), { data })
   }
 
+  renderDataItem(item, section) {
+    return (<ListItem
+        key={section}
+        title={item.name}
+        onPress={this.onItemPressed.bind(this, item, section)}
+        leftIcon={{name: 'code'}}
+      />)
+  }
+
   renderData() {
-    return (<View style={this.styles.containers.main}>
-      <ListView style={this.styles.containers.list}
-          dataSource={this.state.dataSource}
-          renderRow={this.renderListRow.bind(this)}
-          renderSeparator={this.renderRowSeparator.bind(this)}/>
-    </View>)
+    return (<List containerStyle={{marginTop: 0}}>
+      <ListView
+        renderRow={this.renderDataItem.bind(this)}
+        dataSource={this.state.dataSource}
+      />
+    </List>)
   }
 
   render() {
