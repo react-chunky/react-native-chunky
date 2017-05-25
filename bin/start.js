@@ -4,16 +4,14 @@
 
 const path = require('path')
 const spawn = require('child_process').spawn
+const isWindows = /^win/.test(process.platform)
 
 const appDir = process.cwd()
-const libDir = path.resolve(appDir, 'node_modules')
-const reactNativeDir = path.resolve(libDir, 'react-native')
-const packagerDir = path.resolve(reactNativeDir, 'packager')
 const reactNativeChunkyDir = path.dirname(__dirname)
+const reactNativeChunkyBinDir = path.resolve(reactNativeChunkyDir, 'bin')
 const reactNativeChunkyAppDir = path.resolve(reactNativeChunkyDir, 'app')
 
-const packagerExec = path.resolve(packagerDir, 'packager.sh')
-
+const packagerExec = path.resolve(reactNativeChunkyBinDir, isWindows ? 'packager.bat' : 'packager.sh')
 const packager = spawn(packagerExec, ['--verbose', '--projectRoots', `${appDir},${reactNativeChunkyAppDir}`])
 
 packager.stdout.on('data', (data) => {
