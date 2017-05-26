@@ -16,7 +16,6 @@ const reactNativeChunkyAppDir = path.resolve(reactNativeChunkyDir, 'app')
 
 const packagerExec = path.resolve(reactNativeChunkyBinDir, isWindows ? 'packager.bat' : 'packager.sh')
 const packager = spawn(packagerExec, ['--verbose', '--projectRoots', `${appDir},${reactNativeChunkyAppDir}`])
-"remotedev": "remotedev --hostname=localhost --port=8000 --injectserver=reactnative"
 
 packager.stdout.on('data', (data) => {
   console.log(`${data}`);
