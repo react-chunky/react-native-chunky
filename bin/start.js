@@ -5,7 +5,7 @@ const spawn = require('child_process').spawn
 const remotedev = require('remotedev-server')
 
 // Inject the remote dev server in the React Native Debugger
-remotedev({ hostname: 'localhost', port: 8000, injectserver: 'reactnative' })
+// remotedev({ hostname: 'localhost', port: 8000, injectserver: 'reactnative' })
 
 const isWindows = /^win/.test(process.platform)
 
