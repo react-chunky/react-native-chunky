@@ -1,6 +1,7 @@
 import { StackNavigator, TabNavigator, DrawerNavigator, DrawerView } from 'react-navigation'
 import React, { PureComponent } from 'react'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { Icon } from 'react-native-elements'
 import { Image, Platform, Button, ScrollView } from 'react-native'
 import { Styles } from 'react-chunky'
 
@@ -133,14 +134,30 @@ export default class App extends PureComponent {
         title: route.title || "",
         headerTintColor: Styles.styleColor(this.props.theme.navigationTintColor),
         headerStyle: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
-        headerLeft: headerLeft(navigation)
+        headerLeft: headerLeft(navigation),
+        tabBarLabel: route.title || "",
+        tabBarIcon: ({ tintColor }) => this._createRouteIcon(route, tintColor)
       }
     }
   }
 
+  _createRouteIcon(route, tintColor) {
+    if (!route.icon) {
+      return <Icon name='help' type='material' color={tintColor}/>
+    }
+
+    var [iconType, iconName] = route.icon.split("/")
+    if (!iconName) {
+      iconName = iconType
+      iconType = 'material'
+    }
+
+    return (<Icon name={iconName} type={iconType} color={tintColor}/>)
+  }
+
   _createSectionNavigator(section) {
     if (!section || !section.stack) {
-      // We don't even considers stackless sections
+      // We don't even consider stackless sections
       return
     }
 
