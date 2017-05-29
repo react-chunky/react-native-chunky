@@ -60,14 +60,19 @@ export default class App extends PureComponent {
     // These routes will be the ones we want to parse out of the chunk, as necessary
     var routes = {}
 
-    var rootRoute = true
+    var rootRoute = {}
+
     for (let routeName in chunk.routes) {
       // Great, this chunk has routes, let's look through all of them
       var route = chunk.routes[routeName]
 
-      if (rootRoute) {
+      if (Object.keys(rootRoute).length === 0) {
         route.root = true
-        rootRoute = false
+        route.menuTitle = route.title
+        rootRoute = Object.assign({}, route)
+      } else {
+        route.icon = rootRoute.icon
+        route.menuTitle = rootRoute.menuTitle
       }
 
       // Let's build up the transitions, if any
@@ -135,7 +140,7 @@ export default class App extends PureComponent {
         headerTintColor: Styles.styleColor(this.props.theme.navigationTintColor),
         headerStyle: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
         headerLeft: headerLeft(navigation),
-        tabBarLabel: route.title || "",
+        tabBarLabel: route.menuTitle || "",
         tabBarIcon: ({ tintColor }) => this._createRouteIcon(route, tintColor)
       }
     }
