@@ -4,6 +4,5 @@ import * as appChunks from '../../../chunks'
 
 config.chunks = appChunks
 config.id = "chunky"
-config.platform = "ios"
 
 export default config

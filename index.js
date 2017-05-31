@@ -1,6 +1,7 @@
 import React from 'react'
 import { Core } from 'react-chunky'
 import { AppRegistry, AsyncStorage, Text } from 'react-native'
+import RNFirebase from 'react-native-firebase'
 
 import * as Styles from './src/styles'
 import * as Errors from './src/errors'
@@ -9,8 +10,12 @@ import ListScreen from './src/core/ListScreen'
 import App from './src/core/App'
 
 global.localStorage = AsyncStorage
+global.firebase = RNFirebase.initializeApp({
+  debug: true
+})
 
 export function renderApp(props) {
+
   const main = () => (<Core.AppContainer {...props}>
     <App {...props}/>
   </Core.AppContainer>)

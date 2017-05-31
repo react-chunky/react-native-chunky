@@ -1,6 +1,6 @@
 {
   "name": "react-native-chunky",
-  "version": "0.7.12",
+  "version": "0.7.13",
   "description": "The Full Stack React Framework",
   "scripts": {
     "test": "react-native-savor test",
@@ -23,7 +23,7 @@
   "dependencies": {
     "react-chunky": "0.7.x",
     "react-native-firebase": "^1.1.0",
-    "react-native": "0.44.1",
+    "react-native": "0.44.2",
     "react-native-elements": "^0.12.2",
     "react-native-vector-icons": "^4.0.1",
     "react-navigation": "^1.0.0-beta.11"
