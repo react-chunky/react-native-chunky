@@ -64,7 +64,7 @@ export default class ListScreen extends Screen {
     </View>)
   }
 
-  reposDataOnChanged(old, data) {
+  updateData(data) {
     if (!data) {
       // Forget invalid data fetches
       return
