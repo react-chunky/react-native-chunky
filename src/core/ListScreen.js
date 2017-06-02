@@ -21,9 +21,7 @@ export default class ListScreen extends Screen {
     this.state = { dataSource }
   }
 
-  retrieveData() {
-
-  }
+  retrieveData() {}
 
   hasError() {
     return false
@@ -31,10 +29,6 @@ export default class ListScreen extends Screen {
 
   hasData() {
     return false
-  }
-
-  detailsTransitionId() {
-    return 'details'
   }
 
   onRetryPressed() {
@@ -45,9 +39,9 @@ export default class ListScreen extends Screen {
     this.retrieveData()
   }
 
-  renderError(error) {
+  renderError(error = {}) {
     return (<View style={this.styles.containers.main}>
-      <Text> { error.message } </Text>
+      <Text> { error.message || "" } </Text>
         <Button
           onPress={this._onRetryPressed}
           title="Retry"
@@ -73,25 +67,25 @@ export default class ListScreen extends Screen {
   }
 
   onItemPressed(data, section) {
-    this.triggerTransition(this.detailsTransitionId(), { data })
+    this.transitions.showDetails(data)
   }
 
   renderDataItem(item, section) {
     return (<ListItem
         key={section}
-        title={item.name}
+        title={item.title}
         onPress={this.onItemPressed.bind(this, item, section)}
-        leftIcon={{name: 'code'}}
+        leftIcon={{name: 'done'}}
       />)
   }
 
   renderData() {
-    return (<List containerStyle={{marginTop: 0}}>
-      <ListView
-        renderRow={this.renderDataItem.bind(this)}
-        dataSource={this.state.dataSource}
-      />
-    </List>)
+      return (<List containerStyle={styles.container}>
+        <ListView
+          renderRow={this.renderDataItem.bind(this)}
+          dataSource={this.state.dataSource}
+        />
+      </List>)
   }
 
   render() {
@@ -106,3 +100,10 @@ export default class ListScreen extends Screen {
     return this.renderProgress()
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 0
+  }
+})

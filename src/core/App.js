@@ -1,4 +1,5 @@
 import { StackNavigator, TabNavigator, DrawerNavigator, DrawerView } from 'react-navigation'
+import URL from 'url-parse'
 import React, { PureComponent } from 'react'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { Icon } from 'react-native-elements'
@@ -29,6 +30,15 @@ export default class App extends PureComponent {
 
     // We're ready to keep track of our app sections and navigator
     this.state = { sections, navigator }
+  }
+
+  _resolveTransitionFromURI(uri) {
+      const url = new URL(uri, true)
+      return {
+        name: url.hash.substring(1),
+        type: url.protocol.slice(0, -1).toLowerCase(),
+        route: url.hostname + url.pathname
+      }
   }
 
   _createSectionNavigatorRoutes(element, section) {
@@ -62,6 +72,17 @@ export default class App extends PureComponent {
 
     var rootRoute = {}
 
+    // Let's build up global transitions, if any
+    var globalTransitions = {}
+
+    if (this.props.transitions) {
+        this.props.transitions.forEach(transitionUri => {
+          // Let's resolve global transitions
+          const transition = this._resolveTransitionFromURI(transitionUri)
+          globalTransitions[transition.name] = transition
+        })
+    }
+
     for (let routeName in chunk.routes) {
       // Great, this chunk has routes, let's look through all of them
       var route = chunk.routes[routeName]
@@ -79,26 +100,29 @@ export default class App extends PureComponent {
       var transitions = {}
 
       if (chunk.transitions) {
-        for (let transitionName in chunk.transitions) {
-          var transition = chunk.transitions[transitionName]
+        chunk.transitions.forEach(transitionUri => {
+          // Parse this transitions' URI
+          var url = new URL(transitionUri, true)
 
-          if (transition.route) {
+          var transition = {
+            name: url.hash.substring(1),
+            type: url.protocol.slice(0, -1).toLowerCase(),
+            route: url.hostname
+          }
+
+          if (transition.route && chunk.routes[transition.route]) {
             // This is a local transition, so let's resolve locally
-            transitions[transitionName] = Object.assign({}, transition, { route: `${section.name}/${chunkName}/${transition.route}` })
-            continue
+            transition.route = `${section.name}/${chunkName}/${transition.route}`
+            transitions[transition.name] = transition
+            return
+          }       
+
+          if (globalTransitions[transition.name]) {
+            // Let's look through the global transitions, if any
+            transitions[transition.name] = Object.assign({}, globalTransitions[transition.name])
           }
-
-          // This looks like a valid global transition
-          transition = this.props.transitions[transitionName]
-
-          if (!transition) {
-            // This transition is unknown
-            continue
-          }
-
-          // Keep track of the global transition
-          transitions[transitionName] = Object.assign({}, transition)
-        }
+         
+        })
       }
 
       // Let's pass over the theme as well
@@ -257,7 +281,20 @@ export default class App extends PureComponent {
     }
 
     // Let's put them all together into a headerless stack navigator
-    return StackNavigator(subNavigators, { headerMode: 'none' })
+    const navigator = StackNavigator(subNavigators, { headerMode: 'none' })
+
+    // Save the original handler
+    const defaultGetStateForAction = navigator.router.getStateForAction
+
+    navigator.router.getStateForAction = (action, state) => {
+      if (action.params && action.params.replace) {
+      }
+
+      // Handle all other actions with the default handler
+      return defaultGetStateForAction(action, state)
+    }
+
+    return navigator
   }
 
   render() {

@@ -2,14 +2,9 @@ import React from 'react'
 import { View, Button } from 'react-native'
 import { Core } from 'react-chunky'
 import * as DefaultStyles from '../styles'
+// import { NavigationActions } from 'react-navigation'
 
 export default class Screen extends Core.Screen {
-
-  constructor(props) {
-    super(props)
-
-    this.state = { triggered: false }
-  }
 
   get styles() {
     return {
@@ -17,26 +12,19 @@ export default class Screen extends Core.Screen {
     }
   }
 
-  triggerTransition (name, data) {
-    if (this.state.triggered || !this.props.transitions || !this.props.transitions[name]) {
-      // We already transitioned, or this is an unknown transition
-      return
-    }
+  get auth() {
+    return this.props.navigation.state.params.auth
+  }
 
-    // This is the transition we're looking for
-    const transition = this.props.transitions[name]
+  get data() {
+    return this.props.navigation.state.params
+  }
 
-    if (!transition.route) {
-      // This transition does not have a route, so forget about it
-      return
-    }
+  replace(transition, data) {
+    this.props.navigation.navigate(transition, Object.assign({ replace: true}, data))
+  }
 
-    if (transition.replace) {
-      // We're replacing the previous route with this one
-      this.setState({ triggered: true })
-    }
-
-    // Let's actually perform the transition to the new route
-    this.props.navigation.navigate(transition.route, data)
+  push(transition, data) {
+    this.props.navigation.navigate(transition, data)
   }
 }
