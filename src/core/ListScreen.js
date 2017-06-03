@@ -21,14 +21,8 @@ export default class ListScreen extends Screen {
     this.state = { dataSource }
   }
 
-  retrieveData() {}
-
-  hasError() {
-    return false
-  }
-
-  hasData() {
-    return false
+  onData(type, data) {
+    this.updateData(data)
   }
 
   onRetryPressed() {
@@ -70,12 +64,17 @@ export default class ListScreen extends Screen {
     this.transitions.showDetails(data)
   }
 
+  dataItem(item) {
+    return ({title: item.title,
+            leftIcon: {name: 'done'}})
+  }
+
   renderDataItem(item, section) {
+    const dataItem = this.dataItem(item)
     return (<ListItem
         key={section}
-        title={item.title}
         onPress={this.onItemPressed.bind(this, item, section)}
-        leftIcon={{name: 'done'}}
+        {...dataItem}
       />)
   }
 

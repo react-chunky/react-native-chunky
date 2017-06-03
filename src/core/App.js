@@ -121,7 +121,6 @@ export default class App extends PureComponent {
             // Let's look through the global transitions, if any
             transitions[transition.name] = Object.assign({}, globalTransitions[transition.name])
           }
-         
         })
       }
 
@@ -129,7 +128,8 @@ export default class App extends PureComponent {
       const theme = this.props.theme
 
       // For each route, we want to compose its properties
-      const screenProps = Object.assign({ theme, transitions }, route.props || {})
+      // const screenProps = Object.assign({ theme, transitions, style: route.style || {} }, route.props || {})
+      const screenProps = { theme, transitions, ...route, chunkName }
 
       // Now that we have properties, we're ready to initialize the route's screen
       const RouteScreen = route.screen
