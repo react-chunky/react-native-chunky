@@ -20,17 +20,17 @@ export default class ListScreen extends Screen {
     const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     this.state = { dataSource }
   }
-
-  onData(type, data) {
-    this.updateData(data)
+ 
+  componentDidMount() {
+    this.props.retrieveData()
   }
 
   onRetryPressed() {
-    this.retrieveData()
+    this.props.retrieveData()
   }
 
-  componentDidMount() {
-    this.retrieveData()
+  onDataChanged(data) {
+    this.updateData(data)
   }
 
   renderError(error = {}) {
@@ -57,7 +57,7 @@ export default class ListScreen extends Screen {
       // Forget invalid data fetches
       return
     }
-    this.setState({ dataSource: this.state.dataSource.cloneWithRows(data)})
+    this.setState({ dataSource: this.state.dataSource.cloneWithRows(data.main)})
   }
 
   onItemPressed(data, section) {
@@ -88,11 +88,11 @@ export default class ListScreen extends Screen {
   }
 
   render() {
-    if (this.hasError()) {
+    if (this.props.hasDataError()) {
       return this.renderError()
     }
 
-    if (this.hasData()) {
+    if (this.props.hasData()) {
       return this.renderData()
     }
 
