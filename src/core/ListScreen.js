@@ -17,20 +17,15 @@ export default class ListScreen extends Screen {
   constructor(props) {
     super(props)
     this._onRetryPressed = this.onRetryPressed.bind(this)
-    const dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+    const dataSource = new ListView.DataSource({ 
+      rowHasChanged: (r1, r2) => r1 !== r2 ,
+      sectionHeaderHasChanged: (s1, s2) => s1 !== s2
+    })
     this.state = { dataSource }
-  }
- 
-  componentDidMount() {
-    this.props.retrieveData()
   }
 
   onRetryPressed() {
     this.props.retrieveData()
-  }
-
-  onDataChanged(data) {
-    this.updateData(data)
   }
 
   renderError(error = {}) {
@@ -52,12 +47,12 @@ export default class ListScreen extends Screen {
     </View>)
   }
 
-  updateData(data) {
+  onDataChanged(data) {
     if (!data) {
       // Forget invalid data fetches
       return
     }
-    this.setState({ dataSource: this.state.dataSource.cloneWithRows(data.main)})
+    this.setState({ dataSource: this.state.dataSource.cloneWithRowsAndSections(data.main)})
   }
 
   onItemPressed(data, section) {
@@ -78,10 +73,15 @@ export default class ListScreen extends Screen {
       />)
   }
 
+  renderDataSectionHeader(data, header) {
+     return (<Text style={styles.header}>{header}</Text>)
+  }
+
   renderData() {
       return (<List containerStyle={styles.container}>
         <ListView
           renderRow={this.renderDataItem.bind(this)}
+          renderSectionHeader={this.renderDataSectionHeader.bind(this)}
           dataSource={this.state.dataSource}
         />
       </List>)
@@ -104,5 +104,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 0
+  },
+  header: {
+    backgroundColor: "#eeeeee",
+    padding: 15
   }
 })
