@@ -17,4 +17,5 @@ export default class Screen extends Core.Screen {
   push(transition, data) {
     this.props.navigation.navigate(transition, data)
   }
+
 }

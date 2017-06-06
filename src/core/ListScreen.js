@@ -83,12 +83,17 @@ export default class ListScreen extends Screen {
 
   renderList() {
     if (this.state.hideSections) {
-      return (<ListView renderRow={this.renderDataItem.bind(this)} dataSource={this.state.dataSource}/>)
+      return (<ListView 
+          renderRow={this.renderDataItem.bind(this)} 
+          dataSource={this.state.dataSource}
+          removeClippedSubviews={false}
+      />)
     }
 
     return (<ListView 
         renderRow={this.renderDataItem.bind(this)} 
         renderSectionHeader={this.renderDataSectionHeader.bind(this)}
+        removeClippedSubviews={false}
         dataSource={this.state.dataSource}
       />)
   }
