@@ -52,7 +52,11 @@ export default class ListScreen extends Screen {
       // Forget invalid data fetches
       return
     }
-    this.setState({ dataSource: this.state.dataSource.cloneWithRowsAndSections(data.main)})
+
+    this.setState({ 
+      hideSections: Array.isArray(data.main), 
+      dataSource: Array.isArray(data.main) ? this.state.dataSource.cloneWithRows(data.main) : this.state.dataSource.cloneWithRowsAndSections(data.main) 
+    })
   }
 
   onItemPressed(data, section) {
@@ -77,13 +81,21 @@ export default class ListScreen extends Screen {
      return (<Text style={styles.header}>{header}</Text>)
   }
 
+  renderList() {
+    if (this.state.hideSections) {
+      return (<ListView renderRow={this.renderDataItem.bind(this)} dataSource={this.state.dataSource}/>)
+    }
+
+    return (<ListView 
+        renderRow={this.renderDataItem.bind(this)} 
+        renderSectionHeader={this.renderDataSectionHeader.bind(this)}
+        dataSource={this.state.dataSource}
+      />)
+  }
+
   renderData() {
       return (<List containerStyle={styles.container}>
-        <ListView
-          renderRow={this.renderDataItem.bind(this)}
-          renderSectionHeader={this.renderDataSectionHeader.bind(this)}
-          dataSource={this.state.dataSource}
-        />
+        { this.renderList() }
       </List>)
   }
 
