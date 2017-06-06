@@ -70,6 +70,14 @@ export default class ListScreen extends Screen {
 
   renderDataItem(item, section) {
     const dataItem = this.dataItem(item)
+
+    if (dataItem.ignoreTap) {
+      return (<ListItem
+          key={section}
+          {...dataItem}
+        />)      
+    }
+
     return (<ListItem
         key={section}
         onPress={this.onItemPressed.bind(this, item, section)}

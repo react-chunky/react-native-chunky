@@ -14,6 +14,10 @@ export default class Screen extends Core.Screen {
     this.props.navigation.navigate(transition, Object.assign({ replace: true}, data))
   }
 
+  inheritedData() {
+    return this.props.navigation.state.params || {}
+  }
+
   push(transition, data) {
     this.props.navigation.navigate(transition, data)
   }
