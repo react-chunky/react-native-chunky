@@ -53,9 +53,21 @@ export default class ListScreen extends Screen {
       return
     }
 
+    var rawData = {}
+    var sortedTitles = []
+    if (!Array.isArray(data.main)) {
+      // Sort the keys
+      const sortedSectionIds = Object.keys(data.main).sort()
+      sortedSectionIds.forEach(sectionId => {
+        const section = data.main[sectionId]
+        sortedTitles.push(section.title)
+        rawData[section.title] = section.data
+      })
+    }
+
     this.setState({ 
       hideSections: Array.isArray(data.main), 
-      dataSource: Array.isArray(data.main) ? this.state.dataSource.cloneWithRows(data.main) : this.state.dataSource.cloneWithRowsAndSections(data.main) 
+      dataSource: Array.isArray(data.main) ? this.state.dataSource.cloneWithRows(data.main) : this.state.dataSource.cloneWithRowsAndSections(rawData) 
     })
   }
 
