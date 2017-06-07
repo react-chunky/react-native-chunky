@@ -239,7 +239,7 @@ export default class App extends PureComponent {
         tabBarOptions: {
           scrollEnabled: false,
           showIcon: true,
-          showLabel: false
+          showLabel: (Platform.OS === 'ios')
         }
       })
     }
