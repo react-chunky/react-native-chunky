@@ -235,7 +235,12 @@ export default class App extends PureComponent {
 
     if (section.layout === "tabs") {
       return TabNavigator(routes, {
-        headerMode: 'none'
+        headerMode: 'none',
+        tabBarOptions: {
+          scrollEnabled: false,
+          showIcon: true,
+          showLabel: false
+        }
       })
     }
 
