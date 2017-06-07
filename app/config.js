@@ -3,6 +3,6 @@ import config from '../../../chunky.json'
 import * as appChunks from '../../../chunks'
 
 config.chunks = appChunks
-config.id = "chunky"
+config.id = config.id || "chunky"
 
 export default config
