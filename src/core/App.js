@@ -292,7 +292,9 @@ export default class App extends PureComponent {
     const defaultGetStateForAction = navigator.router.getStateForAction
 
     navigator.router.getStateForAction = (action, state) => {
-      if (action.params && action.params.chunky) {
+      if (action.type === 'Navigation/BACK' && state.routes[state.index].index === 0) {        
+        // Ignore the back on the first screen
+        return state
       }
 
       // Handle all other actions with the default handler
