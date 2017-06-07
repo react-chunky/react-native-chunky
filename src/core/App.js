@@ -287,7 +287,7 @@ export default class App extends PureComponent {
     const defaultGetStateForAction = navigator.router.getStateForAction
 
     navigator.router.getStateForAction = (action, state) => {
-      if (action.params && action.params.replace) {
+      if (action.params && action.params.chunky) {
       }
 
       // Handle all other actions with the default handler

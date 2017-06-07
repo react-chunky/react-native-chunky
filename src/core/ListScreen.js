@@ -21,7 +21,7 @@ export default class ListScreen extends Screen {
       rowHasChanged: (r1, r2) => r1 !== r2 ,
       sectionHeaderHasChanged: (s1, s2) => s1 !== s2
     })
-    this.state = { dataSource }
+    this.state = { ...super.state, dataSource }
   }
 
   onRetryPressed() {

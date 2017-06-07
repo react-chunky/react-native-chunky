@@ -4,6 +4,11 @@ import * as DefaultStyles from '../styles'
 
 export default class Screen extends Core.Screen {
 
+ constructor(props) {
+    super(props)
+    this.state = { lastTransitionTimestamp: '' }
+  }
+
   get styles() {
     return {
       containers: DefaultStyles.containers(this.props.theme)
@@ -11,7 +16,8 @@ export default class Screen extends Core.Screen {
   }
 
   replace(transition, data) {
-    this.props.navigation.navigate(transition, Object.assign({ replace: true}, data))
+    // TODO fix replace issue
+    this.push(transition, data)
   }
 
   inheritedData() {
@@ -19,6 +25,13 @@ export default class Screen extends Core.Screen {
   }
 
   push(transition, data) {
+    const timeSinceLastTransition = Date.now() - this.state.lastTransitionTimestamp
+    if (this.state.lastTransitionTimestamp && timeSinceLastTransition < 500) {
+      // Ignore transition
+      return
+    }
+
+    this.setState({ lastTransitionTimestamp: Date.now() })
     this.props.navigation.navigate(transition, data)
   }
 
