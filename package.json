@@ -1,6 +1,6 @@
 {
   "name": "react-native-chunky",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "The Full Stack React Framework",
   "scripts": {
     "test": "react-native-savor test",
@@ -22,9 +22,10 @@
   "homepage": "https://github.com/react-chunky/react-native-chunky",
   "dependencies": {
     "react-chunky": "0.8.x",
-    "react-native-firebase": "^1.1.0",
     "react-native": "0.44.2",
+    "react-native-blur": "^3.0.0-alpha",
     "react-native-elements": "^0.12.2",
+    "react-native-firebase": "^1.1.0",
     "react-native-vector-icons": "^4.0.1",
     "react-navigation": "^1.0.0-beta.11"
   },

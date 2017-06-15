@@ -16,16 +16,12 @@ export default class ListScreen extends Screen {
 
   constructor(props) {
     super(props)
-    this._onRetryPressed = this.onRetryPressed.bind(this)
+    // this._onRetryPressed = this.onRetryPressed.bind(this)
     const dataSource = new ListView.DataSource({ 
       rowHasChanged: (r1, r2) => r1 !== r2 ,
       sectionHeaderHasChanged: (s1, s2) => s1 !== s2
     })
-    this.state = { ...super.state, dataSource }
-  }
-
-  onRetryPressed() {
-    this.props.retrieveData()
+    this.state = { ...this.state, dataSource }
   }
 
   renderError(error = {}) {
@@ -38,7 +34,7 @@ export default class ListScreen extends Screen {
       </View>)
   }
 
-  renderProgress() {
+  renderDataLoading() {
     return (<View style={this.styles.containers.main}>
       <ActivityIndicator
         animating={true}
@@ -47,7 +43,14 @@ export default class ListScreen extends Screen {
     </View>)
   }
 
-  onDataChanged(data) {
+ operationDidFinish(data, error) {   
+    if (!error && data) {
+      this.updateData(data)
+      return
+    }
+  }
+
+  updateData(data) {
     if (!data) {
       // Forget invalid data fetches
       return
@@ -124,17 +127,6 @@ export default class ListScreen extends Screen {
       </List>)
   }
 
-  render() {
-    if (this.props.hasDataError()) {
-      return this.renderError()
-    }
-
-    if (this.props.hasData()) {
-      return this.renderData()
-    }
-
-    return this.renderProgress()
-  }
 }
 
 const styles = StyleSheet.create({

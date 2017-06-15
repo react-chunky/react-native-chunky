@@ -35,9 +35,9 @@ export default class App extends PureComponent {
   _resolveTransitionFromURI(uri) {
       const url = new URL(uri, true)
       return {
-        name: url.hash.substring(1),
+        name: `show${url.hostname.charAt(0).toUpperCase()}${url.hostname.substring(1).toLowerCase()}`,
         type: url.protocol.slice(0, -1).toLowerCase(),
-        route: url.hostname + url.pathname
+        route: url.hostname
       }
   }
 
@@ -60,7 +60,7 @@ export default class App extends PureComponent {
     }
 
     // Great, so we've cleared the chunk and its flavor, if any, let's check the icon
-    const iconName = `${chunkName}/${ chunkFlavorName ? chunkFlavorName : 'icon' }`
+    // const iconName = `${chunkName}/${ chunkFlavorName ? chunkFlavorName : 'icon' }`
 
     if (!chunk.routes || chunk.routes.length === 0) {
       // One last thing, let's also make sure the chunk has routes
@@ -101,14 +101,8 @@ export default class App extends PureComponent {
 
       if (chunk.transitions) {
         chunk.transitions.forEach(transitionUri => {
-          // Parse this transitions' URI
-          var url = new URL(transitionUri, true)
-
-          var transition = {
-            name: url.hash.substring(1),
-            type: url.protocol.slice(0, -1).toLowerCase(),
-            route: url.hostname
-          }
+          // Parse this transition's URI
+          const transition = this._resolveTransitionFromURI(transitionUri)
 
           if (transition.route && chunk.routes[transition.route]) {
             // This is a local transition, so let's resolve locally
@@ -128,8 +122,10 @@ export default class App extends PureComponent {
       const theme = this.props.theme
 
       // For each route, we want to compose its properties
-      // const screenProps = Object.assign({ theme, transitions, style: route.style || {} }, route.props || {})
-      const screenProps = { theme, transitions, ...route, chunkName }
+      const screenProps = Object.assign({
+        // Defaults
+        startOperationsOnMount: true
+      }, { theme, transitions, ...route, chunkName, strings: this.props.strings })
 
       // Now that we have properties, we're ready to initialize the route's screen
       const RouteScreen = route.screen
