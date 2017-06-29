@@ -124,9 +124,17 @@ export default class App extends PureComponent {
       // For each route, we want to compose its properties
       const screenProps = Object.assign({
         // Defaults
+        strings: {},
         startOperationsOnMount: true
-      }, { theme, transitions, ...route, chunkName, strings: this.props.strings })
+      }, { theme, transitions, ...route, chunkName })
 
+      // Resolve strings
+      var resolvedStrings = {}
+      for (const string in screenProps.strings) {
+        resolvedStrings[string] = this.props.strings[screenProps.strings[string]] || `??${screenProps.strings[string]}??`
+      }
+      screenProps.strings = Object.assign({}, this.props.strings, resolvedStrings) 
+      
       // Now that we have properties, we're ready to initialize the route's screen
       const RouteScreen = route.screen
       const Screen = (props) => {

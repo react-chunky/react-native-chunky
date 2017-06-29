@@ -22,11 +22,6 @@ import { BlurView, VibrancyView } from 'react-native-blur'
 
 export default class Screen extends Core.Screen {
 
-  constructor(props) {
-    super(props)
-    this.state = { ...this.state }
-  }
-
   get styles() {
     return {
       containers: DefaultStyles.containers(this.props.theme),
