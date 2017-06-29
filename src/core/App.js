@@ -129,7 +129,9 @@ export default class App extends PureComponent {
 
       // Now that we have properties, we're ready to initialize the route's screen
       const RouteScreen = route.screen
-      const Screen = (props) => <RouteScreen {...props} {...screenProps}/>
+      const Screen = (props) => {
+        return <RouteScreen {...props} {...screenProps}/>
+      }
 
       // Good, so let's add this route to the navigator
       routes[`${section.name}/${chunkName}/${routeName}`] = { screen: Screen, navigationOptions: this._createRouteNavigationOptions(section, route) }

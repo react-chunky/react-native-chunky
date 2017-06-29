@@ -34,7 +34,7 @@ export default class Screen extends Core.Screen {
     }
   }
 
-  inheritedData() {
+  get data() {
     return this.props.navigation.state.params || {}
   }
 

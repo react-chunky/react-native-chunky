@@ -15,10 +15,10 @@ global.firebase = RNFirebase.initializeApp({
 })
 
 export function renderApp(props) {
-
   const main = () => (<Core.AppContainer {...props}>
     <App {...props}/>
   </Core.AppContainer>)
+  
   AppRegistry.registerComponent(props.id, () => main)
 }
 
