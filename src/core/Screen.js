@@ -17,6 +17,7 @@ import {
   Keyboard,
 } from 'react-native'
 
+import { NavigationActions } from 'react-navigation'
 import { FormLabel, FormInput, Button, Icon, FormValidationMessage, Card } from 'react-native-elements'
 import { BlurView, VibrancyView } from 'react-native-blur'
 
@@ -34,8 +35,11 @@ export default class Screen extends Core.Screen {
   }
 
   pushTransition(transition, data) {
-    super.pushTransition(transition, data)
-    this.props.navigation.navigate(transition, data)
+    this.props.navigation.navigate(transition.route, data)
+  }
+
+  replaceTransition(transition, data) {
+    this.props.navigation.navigate(transition.route, data)
   }
 
   renderData(data) {
@@ -71,7 +75,7 @@ export default class Screen extends Core.Screen {
     </View>)  
   }
 
-  renderDataLoading() {
+  renderDataLoading2() {
     return (<View style={this.styles.containers.main}>
       <Card
         title={ this.props.strings.inProgress }
@@ -89,6 +93,16 @@ export default class Screen extends Core.Screen {
           title={ this.props.strings.cancel } />
       </Card>
     </View>)
+  }
+
+  renderDataLoading() {
+    return (
+      <View style={this.styles.containers.main}>
+        <ActivityIndicator
+          animating={true}
+          style={{height: 120}}
+          size="small"/>
+      </View>)
   }
 
   renderDataError({ main }) {

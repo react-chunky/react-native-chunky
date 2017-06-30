@@ -1,8 +1,9 @@
-import { StackNavigator, TabNavigator, DrawerNavigator, DrawerView } from 'react-navigation'
+import { StackNavigator, TabNavigator, DrawerNavigator, DrawerView, NavigationActions } from 'react-navigation'
 import URL from 'url-parse'
 import React, { PureComponent } from 'react'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { Icon } from 'react-native-elements'
+
 import { Image, Platform, Button, ScrollView } from 'react-native'
 import { Styles } from 'react-chunky'
 
@@ -142,7 +143,10 @@ export default class App extends PureComponent {
       }
 
       // Good, so let's add this route to the navigator
-      routes[`${section.name}/${chunkName}/${routeName}`] = { screen: Screen, navigationOptions: this._createRouteNavigationOptions(section, route) }
+      routes[`${section.name}/${chunkName}/${routeName}`] = { 
+        screen: Screen, 
+        navigationOptions: this._createRouteNavigationOptions(section, route)
+       }
     }
 
     // We've got ourselves some routes so we should be done with this
@@ -217,7 +221,8 @@ export default class App extends PureComponent {
 
       // Compile a list of options for this section's navigator
       const navigatorConfig = {
-        headerMode: (section.hideHeader ? 'none' : (Platform.OS === 'ios' ? 'float' : 'screen'))
+        headerMode: (section.hideHeader ? 'none' : (Platform.OS === 'ios' ? 'float' : 'screen')),
+        transitionConfig: (props) => {}
       }
 
       routes[`${section.name}/${elementIndex}`] = { screen: StackNavigator(elementRoutes, navigatorConfig) }
@@ -252,7 +257,8 @@ export default class App extends PureComponent {
     }
 
     return StackNavigator(routes, {
-      headerMode: 'none'
+      headerMode: 'none',
+      transitionConfig: (props) => {}
     })
   }
 
@@ -304,11 +310,53 @@ export default class App extends PureComponent {
         return state
       }
 
-      // Handle all other actions with the default handler
-      return defaultGetStateForAction(action, state)
+      var newState = defaultGetStateForAction(action, state)
+
+      if (action.type === 'Navigation/NAVIGATE' && action.params && action.params.transition && action.params.transition.type === 'replace') {
+        this.trimRoutes(action.routeName, newState)
+      }
+
+     // Handle all other actions with the default handler
+      return newState
     }
 
     return navigator
+  }
+
+  trimRoutes(name, state, deep) {
+    if (!state || !state.routes) {
+      return
+    }
+
+    var found = false
+    var index = 0
+    state.routes.forEach(route => {
+      if (found) {
+        return true
+      }
+      if (route.routeName === name) {
+        found = Object.assign({}, route)
+        if (index > 0 && deep) {
+          state.routes.splice(index - 1, 1)
+          state.index = index - 1
+          return true
+        }
+      }
+      index = index + 1
+    })
+
+    if (found) {
+      return true
+    }
+
+    state.routes.forEach(route => {
+      if (this.trimRoutes(name, route, true)) {
+          found = true        
+          return
+      }
+    })
+
+    return found
   }
 
   render() {
