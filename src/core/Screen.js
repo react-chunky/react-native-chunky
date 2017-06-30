@@ -75,25 +75,25 @@ export default class Screen extends Core.Screen {
     </View>)  
   }
 
-  renderDataLoading2() {
-    return (<View style={this.styles.containers.main}>
-      <Card
-        title={ this.props.strings.inProgress }
-        titleStyle={this.styles.forms.header}
-        style={this.styles.forms.container}>
-        <ActivityIndicator
-          animating={true}
-          style={{height: 120}}
-          size="small"/>
-        <Button
-          style={this.styles.forms.secondaryButton}
-          backgroundColor='#ffffff'
-          color="#039BE5"
-          onPress={this._onCancelRetrieveData}
-          title={ this.props.strings.cancel } />
-      </Card>
-    </View>)
-  }
+  // renderDataLoading2() {
+  //   return (<View style={this.styles.containers.main}>
+  //     <Card
+  //       title={ this.props.strings.inProgress }
+  //       titleStyle={this.styles.forms.header}
+  //       style={this.styles.forms.container}>
+  //       <ActivityIndicator
+  //         animating={true}
+  //         style={{height: 120}}
+  //         size="small"/>
+  //       <Button
+  //         style={this.styles.forms.secondaryButton}
+  //         backgroundColor='#ffffff'
+  //         color="#039BE5"
+  //         onPress={this._onCancelRetrieveData}
+  //         title={ this.props.strings.cancel } />
+  //     </Card>
+  //   </View>)
+  // }
 
   renderDataLoading() {
     return (
