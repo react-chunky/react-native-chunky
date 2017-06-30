@@ -170,6 +170,7 @@ export default class App extends PureComponent {
         headerTintColor: Styles.styleColor(this.props.theme.navigationTintColor),
         headerStyle: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
         headerLeft: headerLeft(navigation),
+        gesturesEnabled: false,
         tabBarLabel: route.menuTitle || "",
         tabBarIcon: ({ tintColor }) => this._createRouteIcon(route, tintColor)
       }
