@@ -43,13 +43,6 @@ export default class ListScreen extends Screen {
     </View>)
   }
 
- operationDidFinish(data, error) {   
-    if (!error && data) {
-      this.updateData(data)
-      return
-    }
-  }
-
   updateData(data) {
     if (!data) {
       // Forget invalid data fetches
@@ -58,19 +51,19 @@ export default class ListScreen extends Screen {
 
     var rawData = {}
     var sortedTitles = []
-    if (!Array.isArray(data.main)) {
+    if (!Array.isArray(data)) {
       // Sort the keys
-      const sortedSectionIds = Object.keys(data.main).sort()
+      const sortedSectionIds = Object.keys(data).sort()
       sortedSectionIds.forEach(sectionId => {
-        const section = data.main[sectionId]
+        const section = data[sectionId]
         sortedTitles.push(section.title)
         rawData[section.title] = section.data
       })
     }
 
     this.setState({ 
-      hideSections: Array.isArray(data.main), 
-      dataSource: Array.isArray(data.main) ? this.state.dataSource.cloneWithRows(data.main) : this.state.dataSource.cloneWithRowsAndSections(rawData) 
+      hideSections: Array.isArray(data), 
+      dataSource: Array.isArray(data) ? this.state.dataSource.cloneWithRows(data) : this.state.dataSource.cloneWithRowsAndSections(rawData) 
     })
   }
 
@@ -121,10 +114,15 @@ export default class ListScreen extends Screen {
       />)
   }
 
+  renderHeader() {}
+
   renderData() {
-      return (<List containerStyle={styles.container}>
-        { this.renderList() }
-      </List>)
+      return (<View style={styles.container}>
+        { this.renderHeader() }
+        <List containerStyle={styles.container}>
+          { this.renderList() }
+        </List>
+      </View>)
   }
 
 }

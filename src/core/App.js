@@ -157,11 +157,11 @@ export default class App extends PureComponent {
     // Construct a top left menu button, if necessary
     const headerLeft = (navigation) => {
       if (section.layout === 'drawer' && route.root) {
-        return (<MaterialIcons.Button name="menu" size={28} backgroundColor={Styles.styleColor(this.props.theme.navigationColor)} onPress={() => { navigation.navigate("DrawerOpen") }}/> )
+        return (<MaterialIcons.Button name="menu" size={28} color={Styles.styleColor(this.props.theme.navigationTintColor)} backgroundColor={Styles.styleColor(this.props.theme.navigationColor)} onPress={() => { navigation.navigate("DrawerOpen") }}/> )
       }
 
       if (!route.root) {
-        return (<MaterialIcons.Button name="navigate-before" size={28} backgroundColor={Styles.styleColor(this.props.theme.navigationColor)} onPress={() => { navigation.goBack() }}/> )
+        return (<MaterialIcons.Button name="navigate-before" size={28} color={Styles.styleColor(this.props.theme.navigationTintColor)} backgroundColor={Styles.styleColor(this.props.theme.navigationColor)} onPress={() => { navigation.goBack() }}/> )
       }
 
       return
