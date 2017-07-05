@@ -16,7 +16,6 @@ import {
   Dimensions,
   Keyboard,
 } from 'react-native'
-
 import { NavigationActions } from 'react-navigation'
 import { FormLabel, FormInput, Button, Icon, FormValidationMessage, Card } from 'react-native-elements'
 import { BlurView, VibrancyView } from 'react-native-blur'
@@ -44,18 +43,6 @@ export default class Screen extends Core.Screen {
 
   renderData(data) {
     return ( <View style={this.styles.containers.main}>
-      <Card
-        title={ this.props.strings.success }
-        titleStyle={this.styles.forms.header}
-        style={this.styles.forms.container}>
-        <Text style={this.styles.forms.prompt}> Got some data </Text>
-        <Button
-          style={this.styles.forms.secondaryButton}
-          backgroundColor='#ffffff'
-          color="#039BE5"
-          onPress={this._onRetryRetrieveData}
-          title={this.props.strings.reload}/>
-      </Card>
     </View>)  
   }
 
