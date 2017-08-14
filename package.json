@@ -1,6 +1,6 @@
 {
   "name": "react-native-chunky",
-  "version": "0.8.9",
+  "version": "0.8.10",
   "description": "The Full Stack React Framework",
   "scripts": {
     "test": "react-native-savor test",

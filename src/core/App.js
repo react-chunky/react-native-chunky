@@ -170,7 +170,7 @@ export default class App extends PureComponent {
     // Before we keep track of the screen inside our navigator, we need some navigation options
     return ({ navigation }) => {
       return {
-        title: route.title || "",
+        title: (navigation.state.params && navigation.state.params.title ? navigation.state.params.title : route.title || ""),
         headerTintColor: Styles.styleColor(this.props.theme.navigationTintColor),
         headerStyle: { backgroundColor:  Styles.styleColor(this.props.theme.navigationColor) },
         headerLeft: headerLeft(navigation),

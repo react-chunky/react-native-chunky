@@ -100,6 +100,7 @@ export default class ListScreen extends Screen {
   renderList() {
     if (this.state.hideSections) {
       return (<ListView 
+          enableEmptySections={true}
           renderRow={this.renderDataItem.bind(this)} 
           dataSource={this.state.dataSource}
           removeClippedSubviews={false}
