@@ -43,7 +43,7 @@ export default class Screen extends Core.Screen {
 
   renderData(data) {
     return ( <View style={this.styles.containers.main}>
-    </View>)  
+    </View>)
   }
 
   renderDataDefaults() {
@@ -59,7 +59,7 @@ export default class Screen extends Core.Screen {
           onPress={this._onRetryRetrieveData}
           title={this.props.strings.retry}/>
       </Card>
-    </View>)  
+    </View>)
   }
 
   renderDataLoading() {
@@ -86,6 +86,6 @@ export default class Screen extends Core.Screen {
           onPress={this._onRetryRetrieveData}
           title={this.props.strings.retry}/>
       </Card>
-    </View>)  
+    </View>)
   }
 }
