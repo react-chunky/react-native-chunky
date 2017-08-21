@@ -71,13 +71,13 @@ export default class ListScreen extends Screen {
     this.transitions.showDetails(data)
   }
 
-  dataItem(item) {
+  dataItem(item, section) {
     return ({title: item.title,
             leftIcon: {name: 'done'}})
   }
 
   renderDataItem(item, section) {
-    const dataItem = this.dataItem(item)
+    const dataItem = this.dataItem(item, section)
 
     if (dataItem.ignoreTap) {
       return (<ListItem
@@ -94,7 +94,7 @@ export default class ListScreen extends Screen {
   }
 
   renderDataSectionHeader(data, header) {
-     return (<Text style={styles.header}>{header}</Text>)
+     return (<Text style={styles.header}> { header }</Text>)
   }
 
   renderList() {
@@ -108,6 +108,7 @@ export default class ListScreen extends Screen {
     }
 
     return (<ListView
+        enableEmptySections={true}
         renderRow={this.renderDataItem.bind(this)}
         renderSectionHeader={this.renderDataSectionHeader.bind(this)}
         removeClippedSubviews={false}
