@@ -17,7 +17,7 @@ export default class ListScreen extends Screen {
   constructor(props) {
     super(props)
     // this._onRetryPressed = this.onRetryPressed.bind(this)
-    const dataSource = new ListView.DataSource({ 
+    const dataSource = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2 ,
       sectionHeaderHasChanged: (s1, s2) => s1 !== s2
     })
@@ -61,9 +61,9 @@ export default class ListScreen extends Screen {
       })
     }
 
-    this.setState({ 
-      hideSections: Array.isArray(data), 
-      dataSource: Array.isArray(data) ? this.state.dataSource.cloneWithRows(data) : this.state.dataSource.cloneWithRowsAndSections(rawData) 
+    this.setState({
+      hideSections: Array.isArray(data),
+      dataSource: Array.isArray(data) ? this.state.dataSource.cloneWithRows(data) : this.state.dataSource.cloneWithRowsAndSections(rawData)
     })
   }
 
@@ -83,7 +83,7 @@ export default class ListScreen extends Screen {
       return (<ListItem
           key={section}
           {...dataItem}
-        />)      
+        />)
     }
 
     return (<ListItem
@@ -99,16 +99,16 @@ export default class ListScreen extends Screen {
 
   renderList() {
     if (this.state.hideSections) {
-      return (<ListView 
+      return (<ListView
           enableEmptySections={true}
-          renderRow={this.renderDataItem.bind(this)} 
+          renderRow={this.renderDataItem.bind(this)}
           dataSource={this.state.dataSource}
           removeClippedSubviews={false}
       />)
     }
 
-    return (<ListView 
-        renderRow={this.renderDataItem.bind(this)} 
+    return (<ListView
+        renderRow={this.renderDataItem.bind(this)}
         renderSectionHeader={this.renderDataSectionHeader.bind(this)}
         removeClippedSubviews={false}
         dataSource={this.state.dataSource}

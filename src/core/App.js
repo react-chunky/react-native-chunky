@@ -110,7 +110,7 @@ export default class App extends PureComponent {
             transition.route = `${section.name}/${chunkName}/${transition.route}`
             transitions[transition.name] = transition
             return
-          }       
+          }
 
           if (globalTransitions[transition.name]) {
             // Let's look through the global transitions, if any
@@ -134,8 +134,8 @@ export default class App extends PureComponent {
       for (const string in screenProps.strings) {
         resolvedStrings[string] = this.props.strings[screenProps.strings[string]] || `??${screenProps.strings[string]}??`
       }
-      screenProps.strings = Object.assign({}, this.props.strings, resolvedStrings) 
-      
+      screenProps.strings = Object.assign({}, this.props.strings, resolvedStrings)
+
       // Now that we have properties, we're ready to initialize the route's screen
       const RouteScreen = route.screen
       const Screen = (props) => {
@@ -143,8 +143,8 @@ export default class App extends PureComponent {
       }
 
       // Good, so let's add this route to the navigator
-      routes[`${section.name}/${chunkName}/${routeName}`] = { 
-        screen: Screen, 
+      routes[`${section.name}/${chunkName}/${routeName}`] = {
+        screen: Screen,
         navigationOptions: this._createRouteNavigationOptions(section, route)
        }
     }
@@ -305,9 +305,9 @@ export default class App extends PureComponent {
     const defaultGetStateForAction = navigator.router.getStateForAction
 
     navigator.router.getStateForAction = (action, state) => {
-      if (action.type === 'Navigation/BACK' && state.routes[state.index].index === 0) {        
+      if (action.type === 'Navigation/BACK' && state.routes[state.index].index === 0) {
         // Ignore the back on the first screen
-        return state
+        // return state
       }
 
       var newState = defaultGetStateForAction(action, state)
@@ -351,7 +351,7 @@ export default class App extends PureComponent {
 
     state.routes.forEach(route => {
       if (this.trimRoutes(name, route, true)) {
-          found = true        
+          found = true
           return
       }
     })
