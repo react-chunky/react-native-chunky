@@ -63,29 +63,31 @@ export default class Screen extends Core.Screen {
   }
 
   renderDataLoading() {
-    return (
-      <View style={this.styles.containers.main}>
-        <ActivityIndicator
-          animating={true}
-          style={{height: 120}}
-          size="small"/>
-      </View>)
+    return this.renderData()
+    // return (
+    //   <View style={this.styles.containers.main}>
+    //     <ActivityIndicator
+    //       animating={true}
+    //       style={{height: 120}}
+    //       size="small"/>
+    //   </View>)
   }
 
   renderDataError({ main }) {
-    return (<View style={this.styles.containers.main}>
-      <Card
-        title={ this.props.strings.error }
-        titleStyle={this.styles.forms.header}
-        style={this.styles.forms.container}>
-        <Text style={this.styles.forms.error}> { main.message } </Text>
-        <Button
-          style={this.styles.forms.secondaryButton}
-          backgroundColor='#ffffff'
-          color="#039BE5"
-          onPress={this._onRetryRetrieveData}
-          title={this.props.strings.retry}/>
-      </Card>
-    </View>)
+      return this.renderData()
+    // return (<View style={this.styles.containers.main}>
+    //   <Card
+    //     title={ this.props.strings.error }
+    //     titleStyle={this.styles.forms.header}
+    //     style={this.styles.forms.container}>
+    //     <Text style={this.styles.forms.error}> { main.message } </Text>
+    //     <Button
+    //       style={this.styles.forms.secondaryButton}
+    //       backgroundColor='#ffffff'
+    //       color="#039BE5"
+    //       onPress={this._onRetryRetrieveData}
+    //       title={this.props.strings.retry}/>
+    //   </Card>
+    // </View>)
   }
 }

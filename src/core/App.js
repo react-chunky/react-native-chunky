@@ -36,7 +36,7 @@ export default class App extends PureComponent {
   _resolveTransitionFromURI(uri) {
       const url = new URL(uri, true)
       return {
-        name: `show${url.hostname.charAt(0).toUpperCase()}${url.hostname.substring(1).toLowerCase()}`,
+        name: `show${url.hostname.charAt(0).toUpperCase()}${url.hostname.substring(1)}`,
         type: url.protocol.slice(0, -1).toLowerCase(),
         route: url.hostname
       }

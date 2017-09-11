@@ -132,7 +132,8 @@ export default class ListScreen extends Screen {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 0
+    marginTop: 0,
+    backgroundColor: "#eeeeee"
   },
   header: {
     backgroundColor: "#eeeeee",
