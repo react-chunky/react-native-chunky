@@ -24,6 +24,11 @@ import Spinner from 'react-native-loading-spinner-overlay'
 
 export default class Screen extends Core.Screen {
 
+  constructor(props) {
+    super(props)
+    this.state = { ...this.state, progress: true, progressTitle: this.progressTitle }
+  }
+
   get styles() {
     return {
       containers: DefaultStyles.containers(this.props.theme),
@@ -34,6 +39,13 @@ export default class Screen extends Core.Screen {
   componentDidMount() {
     super.componentDidMount()
     StatusBar.setBarStyle(`${this.props.theme.statusBarLight ? 'light' : 'dark'}-content`, false)
+  }
+
+  get progressTitle() {
+    const min = 0
+    const max = this.props.strings.progressTitle ? this.props.strings.progressTitle.length : 0
+    const id = Math.floor(min + Math.random() * (max - min))
+    return this.props.strings.progressTitle ? this.props.strings.progressTitle[id] : "Please wait"
   }
 
   get data() {
@@ -65,7 +77,7 @@ export default class Screen extends Core.Screen {
   }
 
   renderProgress() {
-    return this.renderProgressSpinner("Please wait", this.state.progress)
+    return this.renderProgressSpinner(this.state.progressTitle, this.state.progress)
   }
 
   replaceTransition(transition, data) {

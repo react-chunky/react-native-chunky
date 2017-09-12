@@ -34,7 +34,6 @@
     "react-native-swiper": "^1.5.10",
     "react-native-vector-icons": "^4.0.1",
     "react-navigation": "^1.0.0-beta.11",
-    "react-transition-group": "^2.2.0",
     "validator": "^8.1.0"
   },
   "devDependencies": {
