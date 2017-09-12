@@ -19,6 +19,7 @@ import {
 import { NavigationActions } from 'react-navigation'
 import { FormLabel, FormInput, Button, Icon, FormValidationMessage, Card } from 'react-native-elements'
 import { BlurView, VibrancyView } from 'react-native-blur'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 export default class Screen extends Core.Screen {
 
@@ -35,6 +36,14 @@ export default class Screen extends Core.Screen {
 
   pushTransition(transition, data) {
     this.props.navigation.navigate(transition.route, data)
+  }
+
+  renderProgressSpinner(title, visible) {
+    return (<Spinner visible={ visible } overlayColor={this.props.theme.progressColor} textContent={ title } textStyle={{color: '#FFFFFF'}} />)
+  }
+
+  renderProgress() {
+    return this.renderProgressSpinner("Please wait", this.state.progress)
   }
 
   replaceTransition(transition, data) {
@@ -64,30 +73,9 @@ export default class Screen extends Core.Screen {
 
   renderDataLoading() {
     return this.renderData()
-    // return (
-    //   <View style={this.styles.containers.main}>
-    //     <ActivityIndicator
-    //       animating={true}
-    //       style={{height: 120}}
-    //       size="small"/>
-    //   </View>)
   }
 
   renderDataError({ main }) {
-      return this.renderData()
-    // return (<View style={this.styles.containers.main}>
-    //   <Card
-    //     title={ this.props.strings.error }
-    //     titleStyle={this.styles.forms.header}
-    //     style={this.styles.forms.container}>
-    //     <Text style={this.styles.forms.error}> { main.message } </Text>
-    //     <Button
-    //       style={this.styles.forms.secondaryButton}
-    //       backgroundColor='#ffffff'
-    //       color="#039BE5"
-    //       onPress={this._onRetryRetrieveData}
-    //       title={this.props.strings.retry}/>
-    //   </Card>
-    // </View>)
+    return this.renderData()
   }
 }
