@@ -5,6 +5,7 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
+  StatusBar,
   Platform,
   TextInput,
   ActivityIndicator,
@@ -30,12 +31,33 @@ export default class Screen extends Core.Screen {
     }
   }
 
+  componentDidMount() {
+    super.componentDidMount()
+    StatusBar.setBarStyle(`${this.props.theme.statusBarLight ? 'light' : 'dark'}-content`, false)
+  }
+
   get data() {
     return this.props.navigation.state.params || {}
   }
 
   pushTransition(transition, data) {
     this.props.navigation.navigate(transition.route, data)
+  }
+
+  hideStatusBar() {
+    StatusBar.setHidden(true, false)
+  }
+
+  showStatusBar() {
+    StatusBar.setHidden(false, false)
+  }
+
+  lightenStatusBar() {
+    StatusBar.setBarStyle('light-content', false)
+  }
+
+  darkenStatusBar() {
+    StatusBar.setBarStyle('dark-content', false)
   }
 
   renderProgressSpinner(title, visible) {

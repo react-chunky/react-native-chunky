@@ -139,10 +139,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 0,
-    backgroundColor: "#eeeeee"
+    backgroundColor: "#FAFAFA"
   },
   header: {
-    backgroundColor: "#eeeeee",
+    backgroundColor: "#FAFAFA",
     padding: 15
   }
 })

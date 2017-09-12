@@ -87,6 +87,7 @@ export default class FormScreen extends Screen {
   }
 
   keyboardWillShow(e) {
+    this.hideStatusBar()
     Animated.timing(this.state.loginOffset, {
       duration: 220,
       toValue: Platform.OS === 'ios' ? (smallScreen ? -90 : -60) : (smallScreen ? -60 : -40),
@@ -94,6 +95,7 @@ export default class FormScreen extends Screen {
   }
 
   keyboardWillHide() {
+    this.showStatusBar()
     Animated.timing(this.state.loginOffset, {
       duration: 220,
       toValue: 0
@@ -213,45 +215,45 @@ export default class FormScreen extends Screen {
     return  (<View/>)
   }
 
-renderSubmitButton() {
-  return (<Button
-      buttonStyle={this.styles.formButton}
-      backgroundColor={this.props.theme.primaryColor}
-      color='#ffffff'
-      onPress={this._onContinuePressed}
-      icon={{name: 'user-circle-o', type: 'font-awesome'}}
-      title={ this.props.strings.action }/>)
-}
+  renderSubmitButton() {
+    return (<Button
+        buttonStyle={this.styles.formButton}
+        backgroundColor={this.props.theme.primaryColor}
+        color='#ffffff'
+        onPress={this._onContinuePressed}
+        icon={{name: 'user-circle-o', type: 'font-awesome'}}
+        title={ this.props.strings.action }/>)
+  }
 
-showError(error) {
-  this.setState({ error: error.message })
-}
+  showError(error) {
+    this.setState({ error: error.message })
+  }
 
-renderQuestionButton() {
-  return (<Button
-      buttonStyle={this.styles.formSecondaryButton}
-      backgroundColor='#ffffff'
-      color={this.props.theme.primaryColor}
-      onPress={this._onQuestionPressed}
-      title={ this.props.strings.question }/>)
-}
+  renderQuestionButton() {
+    return (<Button
+        buttonStyle={this.styles.formSecondaryButton}
+        backgroundColor='#ffffff'
+        color={this.props.theme.primaryColor}
+        onPress={this._onQuestionPressed}
+        title={ this.props.strings.question }/>)
+  }
 
-renderContent() {
-    return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={this.styles.container}>
-        <Animated.View style={[{ transform: [{translateY: this.state.loginOffset}]}]}>
-          { this.renderLogo() }
-          <Card
-            title={ this.props.strings.header }
-            titleStyle={this.styles.formHeader}
-            style={this.styles.formContainer}>
-            { this.renderError() }
-            { this.renderFields() }
-            { this.renderSubmitButton() }
-            { this.renderQuestionButton() }
-          </Card>
-          </Animated.View></View></TouchableWithoutFeedback>)
+  renderContent() {
+      return (
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={this.styles.container}>
+          <Animated.View style={[{ transform: [{translateY: this.state.loginOffset}]}]}>
+            { this.renderLogo() }
+            <Card
+              title={ this.props.strings.header }
+              titleStyle={this.styles.formHeader}
+              style={this.styles.formContainer}>
+              { this.renderError() }
+              { this.renderFields() }
+              { this.renderSubmitButton() }
+              { this.renderQuestionButton() }
+            </Card>
+            </Animated.View></View></TouchableWithoutFeedback>)
   }
 }
 
@@ -261,13 +263,7 @@ const styles = (props) => StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: props.dark ? '#37474F' : '#FAFAFA'
-  },
-  logo: {
-    alignSelf: 'center',
-    justifyContent: 'center',
-    width: 80,
-    height: 80
+    backgroundColor: props.dark ? '#37474F' : props.theme.backgroundColor
   },
   formHeader: {
     padding: 10,
