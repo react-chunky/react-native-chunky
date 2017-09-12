@@ -72,6 +72,10 @@ export default class Screen extends Core.Screen {
     this.props.navigation.navigate(transition.route, data)
   }
 
+  goBack() {
+    this.props.navigation.goBack()
+  }
+
   renderData(data) {
     return ( <View style={this.styles.containers.main}>
     </View>)

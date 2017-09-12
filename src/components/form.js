@@ -179,6 +179,10 @@ export default class FormScreen extends Screen {
 
   selectedImageField(name) {}
 
+  defaultFieldValue(name) {
+    return
+  }
+
   renderField(name, options) {
       if (options.type === 'image') {
         return this.renderImageField(name, options)
@@ -186,6 +190,7 @@ export default class FormScreen extends Screen {
 
       return (<FormInput
             key={`${name}Field`}
+            defaultValue={this.defaultFieldValue(name)}
             placeholder={ this.props.strings[`${name}Placeholder`] }
             onChangeText={this._onFieldChanged(name, options)}
             secureTextEntry={ options.secure }
@@ -284,7 +289,7 @@ const styles = (props) => StyleSheet.create({
   },
   formError: {
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 20,
     alignSelf: "center",
     color: '#f44336'
   },

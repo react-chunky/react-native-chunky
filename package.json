@@ -1,6 +1,6 @@
 {
   "name": "react-native-chunky",
-  "version": "0.8.20",
+  "version": "0.8.21",
   "description": "The Full Stack React Framework",
   "scripts": {
     "test": "react-native-savor test",
@@ -21,20 +21,21 @@
   },
   "homepage": "https://github.com/react-chunky/react-native-chunky",
   "dependencies": {
+    "country-data": "0.0.31",
     "react-chunky": "0.8.x",
     "react-native": "0.44.2",
     "react-native-blur": "^3.0.0-alpha",
     "react-native-elements": "^0.12.2",
     "react-native-firebase": "^1.1.0",
-    "react-native-vector-icons": "^4.0.1",
-    "react-navigation": "^1.0.0-beta.11",
     "react-native-geocoder": "^0.4.8",
-    "react-native-image-picker": "^0.26.6",
     "react-native-htmlview": "^0.12.0",
+    "react-native-image-picker": "^0.26.6",
     "react-native-loading-spinner-overlay": "^0.5.2",
     "react-native-swiper": "^1.5.10",
-    "validator": "^8.1.0",
-    "country-data": "0.0.31"
+    "react-native-vector-icons": "^4.0.1",
+    "react-navigation": "^1.0.0-beta.11",
+    "react-transition-group": "^2.2.0",
+    "validator": "^8.1.0"
   },
   "devDependencies": {
     "react-native-savor": "0.x"
