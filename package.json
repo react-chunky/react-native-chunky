@@ -1,6 +1,6 @@
 {
   "name": "react-native-chunky",
-  "version": "0.8.19",
+  "version": "0.8.20",
   "description": "The Full Stack React Framework",
   "scripts": {
     "test": "react-native-savor test",
@@ -30,6 +30,7 @@
     "react-navigation": "^1.0.0-beta.11",
     "react-native-geocoder": "^0.4.8",
     "react-native-image-picker": "^0.26.6",
+    "react-native-htmlview": "^0.12.0",
     "react-native-loading-spinner-overlay": "^0.5.2",
     "react-native-swiper": "^1.5.10",
     "validator": "^8.1.0",
