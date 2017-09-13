@@ -17,10 +17,14 @@ export default class ListScreen extends Screen {
   constructor(props) {
     super(props)
     const dataSource = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2 ,
+      rowHasChanged: this.rowHasChanged,
       sectionHeaderHasChanged: (s1, s2) => s1 !== s2
     })
     this.state = { ...this.state, dataSource }
+  }
+
+  rowHasChanged (r1, r2) {
+    return (r1 !== r2)
   }
 
   renderError(error = {}) {

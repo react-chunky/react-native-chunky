@@ -327,7 +327,7 @@ export default class App extends PureComponent {
     if (!state || !state.routes) {
       return
     }
-
+    
     var found = false
     var index = 0
     state.routes.forEach(route => {
