@@ -22,6 +22,5 @@ export function findLocation(coordinates) {
            then(res => ({ country: res[0].countryCode,
                 state: res[0].adminArea,
                 city: res[0].locality,
-                name: countries[res[0].countryCode].name,
-                meta: countries[res[0].countryCode]}))
+                countyMeta: countries[res[0].countryCode]}))
 }
