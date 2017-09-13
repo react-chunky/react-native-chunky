@@ -58,6 +58,10 @@ export default class FormScreen extends Screen {
 
   onQuestionPressed() {}
 
+  onError(error) {
+    this.setState({ progress: false, error: error.message })
+  }
+
   isFormValid() {
     // Start by dismissing the keyboard
     Keyboard.dismiss()
