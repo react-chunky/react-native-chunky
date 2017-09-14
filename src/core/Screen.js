@@ -78,7 +78,8 @@ export default class Screen extends Core.Screen {
   }
 
   renderProgress() {
-    return this.renderProgressSpinner(this.state.progressTitle, this.state.progress)
+    return (<View/>)
+    // return this.renderProgressSpinner(this.state.progressTitle, this.state.progress)
   }
 
   replaceTransition(transition, data) {

@@ -11,11 +11,13 @@ import {
   Animated,
   TouchableWithoutFeedback,
   Image,
+  KeyboardAvoidingView,
   Dimensions,
   Keyboard,
 } from 'react-native'
 import { FormLabel, FormInput, Avatar, Button, Icon, FormValidationMessage, Card } from 'react-native-elements'
 import Screen from '../core/Screen'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 let window = Dimensions.get('window'),
   screen = Dimensions.get('window'),
@@ -32,7 +34,7 @@ export default class FormScreen extends Screen {
 
     this._onFieldChanged = (name, options) => this.onFieldChanged.bind(this, name, options)
 
-    this.state = { ...this.state, fields: {}, error: "", progress: false, extended: true, loginOffset: new Animated.Value(0) }
+    this.state = { ...this.state, fields: {}, error: "", progress: false, extended: true, animationOffset: new Animated.Value(0) }
   }
 
   componentWillMount() {
@@ -92,16 +94,18 @@ export default class FormScreen extends Screen {
 
   keyboardWillShow(e) {
     this.hideStatusBar()
-    Animated.timing(this.state.loginOffset, {
-      duration: 220,
-      toValue: Platform.OS === 'ios' ? (smallScreen ? -90 : -60) : (smallScreen ? -60 : -40),
+    const keyboardHeight = e.endCoordinates.height
+
+    Animated.timing(this.state.animationOffset, {
+      duration: 300,
+      toValue: -keyboardHeight
     }).start()
   }
 
   keyboardWillHide() {
     this.showStatusBar()
-    Animated.timing(this.state.loginOffset, {
-      duration: 220,
+    Animated.timing(this.state.animationOffset, {
+      duration: 300,
       toValue: 0
     }).start()
   }
@@ -163,7 +167,7 @@ export default class FormScreen extends Screen {
 
     return (<View key={`${name}Field`} style={{flexDirection: "column", height: 120, alignItems: "center", justifyContent: "center"}}>
         <Avatar
-          style={{height: 74, width: 74 }}
+          style={{height: 75, width: 75 }}
           large
           rounded
           overlayContainerStyle={{ backgroundColor: this.props.theme.primaryColor }}
@@ -247,22 +251,29 @@ export default class FormScreen extends Screen {
         title={ this.props.strings.question }/>)
   }
 
+  renderFormHeader() {
+    return (<Text style={this.styles.formHeader}>
+      { this.props.strings.header }
+    </Text>)
+  }
+
   renderContent() {
       return (
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={this.styles.container}>
-          <Animated.View style={[{ transform: [{translateY: this.state.loginOffset}]}]}>
-            { this.renderLogo() }
-            <Card
-              title={ this.props.strings.header }
-              titleStyle={this.styles.formHeader}
-              style={this.styles.formContainer}>
-              { this.renderError() }
-              { this.renderFields() }
-              { this.renderSubmitButton() }
-              { this.renderQuestionButton() }
-            </Card>
-            </Animated.View></View></TouchableWithoutFeedback>)
+            <View style={[this.styles.container, {
+              flexDirection: "row", alignItems: "center", justifyContent: "center", flex: 1 }]}>
+              <KeyboardAwareScrollView>
+                { this.renderLogo() }
+                { this.renderFormHeader() }
+                <View style={[this.styles.formContainer]}>
+                  { this.renderError() }
+                  { this.renderFields() }
+                  { this.renderSubmitButton() }
+                  { this.renderQuestionButton() }
+                </View>
+                </KeyboardAwareScrollView>
+            </View>
+          </TouchableWithoutFeedback>)
   }
 }
 
@@ -276,10 +287,14 @@ const styles = (props) => StyleSheet.create({
   },
   formHeader: {
     padding: 10,
+    color: props.theme.primaryColor,
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: 'bold'
   },
   formContainer: {
     backgroundColor: '#ffffff',
-    padding: 10,
+    padding: 30,
     margin: 20,
     elevation: 3,
     borderRadius: 4,
