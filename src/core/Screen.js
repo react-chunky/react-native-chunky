@@ -27,7 +27,7 @@ export default class Screen extends Core.Screen {
 
   constructor(props) {
     super(props)
-    this.state = { ...this.state, progress: true, progressTitle: this.progressTitle }
+    this.state = { ...this.state, progress: false, progressTitle: this.progressTitle }
   }
 
   get styles() {
@@ -73,13 +73,13 @@ export default class Screen extends Core.Screen {
     StatusBar.setBarStyle('dark-content', false)
   }
 
-  renderProgressSpinner(title, visible) {
-    return (<Spinner visible={ visible } overlayColor={this.props.theme.primaryColor} textContent={ title } textStyle={{color: '#FFFFFF'}} />)
-  }
-
   renderProgress() {
-    return (<View/>)
-    // return this.renderProgressSpinner(this.state.progressTitle, this.state.progress)
+    return ( <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: this.props.theme.primaryColor }}>
+      <ActivityIndicator color= "#ffffff"/>
+      <Text style={{color: "#ffffff",textAlign:"center", fontSize: 20, fontWeight: "bold", padding: 20}}>
+        { this.state.progressTitle }
+      </Text>
+    </View>)
   }
 
   replaceTransition(transition, data) {

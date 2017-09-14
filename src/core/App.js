@@ -4,7 +4,7 @@ import React, { PureComponent } from 'react'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { Icon } from 'react-native-elements'
 
-import { Image, Platform, NetInfo, Button, View, Text, ScrollView } from 'react-native'
+import { Image, Platform, NetInfo, Button, View, Text, ScrollView, ActivityIndicator } from 'react-native'
 import { Styles } from 'react-chunky'
 
 /**
@@ -23,14 +23,20 @@ export default class App extends PureComponent {
   constructor(props) {
     super(props)
 
-    // As soon as this App is instantiated, we want to generate the sections
-    const sections = this._createSections()
+    // // As soon as this App is instantiated, we want to generate the sections
+    // const sections = this._createSections()
+    //
+    // // Let's create the main app navigator
+    // const navigator = this._createAppNavigator(sections)
+    //
+    // // We're ready to keep track of our app sections and navigator
+    this.state = { hasNetworkConnection: true }
+  }
 
-    // Let's create the main app navigator
-    const navigator = this._createAppNavigator(sections)
-
-    // We're ready to keep track of our app sections and navigator
-    this.state = { sections, navigator,  hasNetworkConnection: true }
+  renderProgress() {
+    return ( <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: this.props.theme.primaryColor }}>
+      <ActivityIndicator color= "#ffffff"/>
+    </View>)
   }
 
   restart(hasNetworkConnection) {
@@ -45,6 +51,10 @@ export default class App extends PureComponent {
   }
 
   _handleConnectivityChange (hasNetworkConnection) {
+    if (this.state.sections && (this.state.hasNetworkConnection === hasNetworkConnection)) {
+      return
+    }
+
     this.setState({ hasNetworkConnection })
     this.restart(hasNetworkConnection)
   }
@@ -388,6 +398,10 @@ export default class App extends PureComponent {
   }
 
   render() {
+    if (!this.state.sections) {
+      return this.renderProgress()
+    }
+
     if (!this.state.hasNetworkConnection) {
       return this.renderNoNetworkConnection()
     }

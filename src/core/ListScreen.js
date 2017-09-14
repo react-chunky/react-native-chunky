@@ -38,12 +38,7 @@ export default class ListScreen extends Screen {
   }
 
   renderDataLoading() {
-    return (<View style={this.styles.containers.main}>
-      <ActivityIndicator
-        animating={true}
-        style={{height: 120}}
-        size="small"/>
-    </View>)
+    return this.renderProgress()
   }
 
   updateData(data) {
@@ -129,7 +124,6 @@ export default class ListScreen extends Screen {
 
   renderData() {
       return (<View style={styles.container}>
-        { this.renderProgress() }
         { this.renderHeader() }
         <List containerStyle={styles.container}>
           { this.renderList() }
