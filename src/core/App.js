@@ -4,7 +4,7 @@ import React, { PureComponent } from 'react'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { Icon } from 'react-native-elements'
 
-import { Image, Platform, Button, ScrollView } from 'react-native'
+import { Image, Platform, NetInfo, Button, View, Text, ScrollView } from 'react-native'
 import { Styles } from 'react-chunky'
 
 /**
@@ -30,7 +30,27 @@ export default class App extends PureComponent {
     const navigator = this._createAppNavigator(sections)
 
     // We're ready to keep track of our app sections and navigator
-    this.state = { sections, navigator }
+    this.state = { sections, navigator,  hasNetworkConnection: true }
+  }
+
+  restart(hasNetworkConnection) {
+    const sections = this._createSections()
+    const navigator = this._createAppNavigator(sections)
+    this.setState({ sections, navigator, hasNetworkConnection })
+  }
+
+  componentDidMount() {
+    NetInfo.isConnected.fetch().done(hasNetworkConnection => this._handleConnectivityChange(hasNetworkConnection))
+    NetInfo.isConnected.addEventListener( 'change', (hasNetworkConnection) => this._handleConnectivityChange(hasNetworkConnection))
+  }
+
+  _handleConnectivityChange (hasNetworkConnection) {
+    this.setState({ hasNetworkConnection })
+    this.restart(hasNetworkConnection)
+  }
+
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('change', this._handleConnectivityChange)
   }
 
   _resolveTransitionFromURI(uri) {
@@ -327,7 +347,7 @@ export default class App extends PureComponent {
     if (!state || !state.routes) {
       return
     }
-    
+
     var found = false
     var index = 0
     state.routes.forEach(route => {
@@ -359,7 +379,19 @@ export default class App extends PureComponent {
     return found
   }
 
+  renderNoNetworkConnection() {
+    return ( <View style={{ flex: 1, flexDirection: 'column', backgroundColor: this.props.theme.primaryColor, alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ fontSize: 20, fontWeight: "bold", color: "#ffffff", textAlign: "center" }}>
+        You are currently offline. Please reconnect to the Internet.
+        </Text>
+    </View>)
+  }
+
   render() {
+    if (!this.state.hasNetworkConnection) {
+      return this.renderNoNetworkConnection()
+    }
+
     // The only element we need to render here is the main app navigator
     const AppNavigator = this.state.navigator
     return <AppNavigator/>

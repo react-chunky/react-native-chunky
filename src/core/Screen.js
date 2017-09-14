@@ -8,6 +8,7 @@ import {
   StatusBar,
   Platform,
   TextInput,
+  NetInfo,
   ActivityIndicator,
   View,
   ScrollView,
@@ -73,7 +74,7 @@ export default class Screen extends Core.Screen {
   }
 
   renderProgressSpinner(title, visible) {
-    return (<Spinner visible={ visible } overlayColor={this.props.theme.progressColor} textContent={ title } textStyle={{color: '#FFFFFF'}} />)
+    return (<Spinner visible={ visible } overlayColor={this.props.theme.primaryColor} textContent={ title } textStyle={{color: '#FFFFFF'}} />)
   }
 
   renderProgress() {
