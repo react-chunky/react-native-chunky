@@ -21,6 +21,5 @@ export function findLocation(coordinates) {
   return Geocoder.geocodePosition(coordinates).
            then(res => ({ country: res[0].countryCode,
                 state: res[0].adminArea,
-                city: res[0].locality,
-                countyMeta: countries[res[0].countryCode]}))
+                city: res[0].locality }))
 }
