@@ -23,13 +23,7 @@ export default class App extends PureComponent {
   constructor(props) {
     super(props)
 
-    // // As soon as this App is instantiated, we want to generate the sections
-    // const sections = this._createSections()
-    //
-    // // Let's create the main app navigator
-    // const navigator = this._createAppNavigator(sections)
-    //
-    // // We're ready to keep track of our app sections and navigator
+    // We're ready to keep track of our app sections and navigator
     this.state = { hasNetworkConnection: true }
   }
 
@@ -192,7 +186,6 @@ export default class App extends PureComponent {
 
       if (!route.root || route.forceBack) {
         return (<MaterialIcons.Button name="navigate-before" size={28} color={Styles.styleColor(this.props.theme.navigationTintColor)} backgroundColor={Styles.styleColor(this.props.theme.navigationColor)} onPress={() => {
-          console.log("BLDLDLDLDLDLD")
           navigation.goBack()
         }}/> )
       }

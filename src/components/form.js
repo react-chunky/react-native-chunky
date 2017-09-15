@@ -150,12 +150,13 @@ export default class FormScreen extends Screen {
   }
 
   renderData() {
-    return (
-      <ScrollView
-        keyboardShouldPersistTaps="always"
-        contentContainerStyle={this.styles.container}>
-        { this.renderContent() }
-      </ScrollView>)
+    return this.renderContent() 
+    // (
+    //   <ScrollView
+    //     keyboardShouldPersistTaps="always"
+    //     contentContainerStyle={this.styles.container}>
+    //     { this.renderContent() }
+    //   </ScrollView>)
   }
 
   keyboardType(type) {

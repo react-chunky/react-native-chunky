@@ -40,6 +40,7 @@ export default class Screen extends Core.Screen {
   componentDidMount() {
     super.componentDidMount()
     StatusBar.setBarStyle(`${this.props.theme.statusBarLight ? 'light' : 'dark'}-content`, false)
+    StatusBar.setHidden(false, false)
   }
 
   get progressTitle() {
@@ -58,11 +59,11 @@ export default class Screen extends Core.Screen {
   }
 
   hideStatusBar() {
-    StatusBar.setHidden(true, false)
+    // StatusBar.setHidden(true, false)
   }
 
   showStatusBar() {
-    StatusBar.setHidden(false, false)
+    // StatusBar.setHidden(false, false)
   }
 
   lightenStatusBar() {
