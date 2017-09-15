@@ -190,8 +190,11 @@ export default class App extends PureComponent {
         return (<MaterialIcons.Button name="menu" size={28} color={Styles.styleColor(this.props.theme.navigationTintColor)} backgroundColor={Styles.styleColor(this.props.theme.navigationColor)} onPress={() => { navigation.navigate("DrawerOpen") }}/> )
       }
 
-      if (!route.root) {
-        return (<MaterialIcons.Button name="navigate-before" size={28} color={Styles.styleColor(this.props.theme.navigationTintColor)} backgroundColor={Styles.styleColor(this.props.theme.navigationColor)} onPress={() => { navigation.goBack() }}/> )
+      if (!route.root || route.forceBack) {
+        return (<MaterialIcons.Button name="navigate-before" size={28} color={Styles.styleColor(this.props.theme.navigationTintColor)} backgroundColor={Styles.styleColor(this.props.theme.navigationColor)} onPress={() => {
+          console.log("BLDLDLDLDLDLD")
+          navigation.goBack()
+        }}/> )
       }
 
       return
@@ -346,7 +349,7 @@ export default class App extends PureComponent {
         this.trimRoutes(action.routeName, newState)
       }
 
-     // Handle all other actions with the default handler
+      // Handle all other actions with the default handler
       return newState
     }
 

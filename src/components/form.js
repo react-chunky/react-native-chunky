@@ -15,7 +15,7 @@ import {
   Dimensions,
   Keyboard,
 } from 'react-native'
-import { FormLabel, FormInput, Avatar, Button, Icon, FormValidationMessage, Card } from 'react-native-elements'
+import { FormLabel, CheckBox, FormInput, Avatar, Button, Icon, FormValidationMessage, Card } from 'react-native-elements'
 import Screen from '../core/Screen'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -31,10 +31,13 @@ export default class FormScreen extends Screen {
     this._onContinuePressed = this.onContinuePressed.bind(this)
     this._onQuestionPressed = this.onQuestionPressed.bind(this)
     this._onImageFieldPressed = (name) => this.onImageFieldPressed.bind(this)
+    this._onSwitchFieldPressed = (name) => this.onSwitchFieldPressed.bind(this)
+    this._onPairsFieldPressed = (name) => this.onPairsFieldPressed.bind(this)
+    this._addNewPair = (name) => this.addNewPair.bind(this, name)
 
     this._onFieldChanged = (name, options) => this.onFieldChanged.bind(this, name, options)
 
-    this.state = { ...this.state, fields: {}, error: "", progress: false, extended: true, animationOffset: new Animated.Value(0) }
+    this.state = { ...this.state, fields: {}, error: "", pairTotals: {}, progress: false, extended: true, animationOffset: new Animated.Value(0) }
   }
 
   componentWillMount() {
@@ -51,7 +54,17 @@ export default class FormScreen extends Screen {
 
   onFieldChanged(name, options, value) {
     var fields = Object.assign({}, this.state.fields)
-    fields[name] = value
+    var id = name
+    var val = value
+
+    if (options.type === 'pairs') {
+      var label = this.props.strings[`${name}PairsLabel`].split("|")
+      val = Object.assign({}, this.state.fields[id])
+      val[options.index] = val[options.index] || {}
+      val[options.index][label[options.pair-1]] = value
+    }
+
+    fields[id] = val
     this.setState({ fields,  error: '' })
   }
 
@@ -183,9 +196,96 @@ export default class FormScreen extends Screen {
         </View>)
   }
 
+  renderSwitchField(name, options) {
+    return (<View key={`${name}Field`} style={{flexDirection: "column", height: 120, alignItems: "center", justifyContent: "center"}}>
+        <CheckBox
+          center
+          title={this.props.strings[`${name}Label`] || ""}
+          iconRight
+          onPress={ () => this.onSwitchFieldPressed(name) }
+          iconType='material'
+          checkedIcon='check-circle'
+          uncheckedIcon='panorama-fish-eye'
+          checkedColor={this.props.theme.primaryColor}
+          checked={this.state.fields[name] ? true : false}
+        />
+        </View>)
+  }
+
+  renderFieldLabel(name) {
+    if (!this.props.strings[`${name}Label`]) {
+      return (<View/>)
+    }
+
+    return (<Text style={{marginTop: 20, color: "#607D8B", fontSize: 14, marginLeft: 12 }}>
+      { this.props.strings[`${name}Label`] }
+    </Text>)
+  }
+
+  renderFieldPairLabel(name, pair) {
+    var label = (this.props.strings[`${name}PairsLabel`] || undefined)
+
+    if (!label) {
+      return (<View/>)
+    }
+
+    return (<Text style={{marginTop: 20, color: "#607D8B", fontSize: 14, marginLeft: 12 }}>
+      { label.split("|")[pair-1] }
+    </Text>)
+  }
+
+  renderPair(name, options, index) {
+    return (<View key={`${name}Field${index}`}>
+        { this.renderFieldPairLabel(name, 1) }
+        { this.renderFormInput(`${name}`, Object.assign({index, pair: 1}, options), 1)}
+        { this.renderFieldPairLabel(name, 2) }
+        { this.renderFormInput(`${name}`, Object.assign({index, pair: 2}, options), 2)}
+    </View>)
+  }
+
+  renderPairs(name, options) {
+    var all = []
+    const total = this.state.pairTotals[name] || 1
+
+    for (var index = 0; index < total; index = index+1) {
+      all.push(this.renderPair(name, options, index + 1))
+    }
+    return all
+  }
+
+  addNewPair(name) {
+    var pairTotals = Object.assign({}, this.state.pairTotals)
+    pairTotals[name] = pairTotals[name] || 1
+    pairTotals[name] = pairTotals[name] + 1
+    this.setState({ pairTotals })
+  }
+
+  renderPairsField(name, options) {
+    return (<View key={`${name}Field`}>
+      { this.renderFieldLabel(name) }
+      { this.renderPairs(name, options)}
+      <Button
+          onPress={this._addNewPair(name)}
+          title={ "Add Another Activity"}
+          style={{marginTop: 20}}
+          backgroundColor={"#FFFFFF"}
+          contentContainerStyle={{ marginTop: 20}}
+          color={this.props.theme.primaryColor}/>
+    </View>)
+  }
+
   onImageFieldPressed(name) {}
 
   selectedImageField(name) {}
+
+  onSwitchFieldPressed(name) {
+    var fields = Object.assign({}, this.state.fields)
+    fields[name] = (fields[name] ? false : true)
+    this.setState({ fields,  error: '' })
+  }
+
+  onPairsFieldPressed(name) {
+  }
 
   defaultFieldValue(name) {
     return
@@ -196,18 +296,38 @@ export default class FormScreen extends Screen {
         return this.renderImageField(name, options)
       }
 
-      return (<FormInput
-            key={`${name}Field`}
-            defaultValue={this.defaultFieldValue(name)}
-            placeholder={ this.props.strings[`${name}Placeholder`] }
-            onChangeText={this._onFieldChanged(name, options)}
-            secureTextEntry={ options.secure }
-            autoCorrect={ false }
-            placeholderTextColor= { "#BDBDBD" }
-            autoCapitalize={ "none" }
-            blurOnSubmit={ true }
-            keyboardType={ this.keyboardType(options.type) }
-            style={this.styles.formTextField}/>)
+      if (options.type === 'switch') {
+        return this.renderSwitchField(name, options)
+      }
+
+      if (options.type === 'pairs') {
+        return this.renderPairsField(name, options)
+      }
+
+      return (<View key={`${name}Field`}>
+            { this.renderFieldLabel(name) }
+            { this.renderFormInput(name, options)}
+            </View>)
+  }
+
+  renderFormInput(name, options, pair) {
+    var placeholder = this.props.strings[`${name}Placeholder`] || ""
+
+    if (pair) {
+      placeholder = placeholder.split("|")[pair-1].trim()
+    }
+
+    return (<FormInput
+          defaultValue={this.defaultFieldValue(name)}
+          placeholder={ placeholder }
+          onChangeText={this._onFieldChanged(name, options)}
+          secureTextEntry={ options.secure }
+          autoCorrect={ false }
+          placeholderTextColor= { "#BDBDBD" }
+          autoCapitalize={ "none" }
+          blurOnSubmit={ true }
+          keyboardType={ this.keyboardType(options.type) }
+          style={this.styles.formTextField}/>)
   }
 
   renderFields() {
@@ -234,7 +354,6 @@ export default class FormScreen extends Screen {
         backgroundColor={this.props.theme.primaryColor}
         color='#ffffff'
         onPress={this._onContinuePressed}
-        icon={{name: 'user-circle-o', type: 'font-awesome'}}
         title={ this.props.strings.action }/>)
   }
 
@@ -245,7 +364,7 @@ export default class FormScreen extends Screen {
   renderQuestionButton() {
     return (<Button
         buttonStyle={this.styles.formSecondaryButton}
-        backgroundColor='#ffffff'
+        backgroundColor={this.props.expandInnerContent ? this.props.theme.backgroundColor : "#ffffff"}
         color={this.props.theme.primaryColor}
         onPress={this._onQuestionPressed}
         title={ this.props.strings.question }/>)
@@ -257,21 +376,45 @@ export default class FormScreen extends Screen {
     </Text>)
   }
 
+  renderContentInner() {
+    if (this.props.expandInnerContent) {
+      return this.renderContentInnerExpanded()
+    }
+    return this.renderContentInnerDefault()
+  }
+
+  renderContentInnerDefault() {
+    return (<KeyboardAwareScrollView>
+      { this.renderLogo() }
+      { this.renderFormHeader() }
+      <View style={[this.styles.formContainer]}>
+        { this.renderError() }
+        { this.renderFields() }
+        { this.renderSubmitButton() }
+        { this.renderQuestionButton() }
+      </View>
+    </KeyboardAwareScrollView>)
+  }
+
+  renderContentInnerExpanded() {
+    return (<KeyboardAwareScrollView>
+      { this.renderLogo() }
+      { this.renderFormHeader() }
+      <View style={[this.styles.formContainer]}>
+        { this.renderError() }
+        { this.renderFields() }
+      </View>
+      { this.renderSubmitButton() }
+      { this.renderQuestionButton() }
+    </KeyboardAwareScrollView>)
+  }
+
   renderContent() {
       return (
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[this.styles.container, {
               flexDirection: "row", alignItems: "center", justifyContent: "center", flex: 1 }]}>
-              <KeyboardAwareScrollView>
-                { this.renderLogo() }
-                { this.renderFormHeader() }
-                <View style={[this.styles.formContainer]}>
-                  { this.renderError() }
-                  { this.renderFields() }
-                  { this.renderSubmitButton() }
-                  { this.renderQuestionButton() }
-                </View>
-                </KeyboardAwareScrollView>
+                { this.renderContentInner() }
             </View>
           </TouchableWithoutFeedback>)
   }
@@ -327,6 +470,6 @@ const styles = (props) => StyleSheet.create({
     marginBottom: 20
   },
   formSecondaryButton: {
-    margin: 10
+    margin: 5
   }
 })
