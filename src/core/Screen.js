@@ -22,6 +22,7 @@ import { NavigationActions } from 'react-navigation'
 import { FormLabel, FormInput, Button, Icon, FormValidationMessage, Card } from 'react-native-elements'
 import { BlurView, VibrancyView } from 'react-native-blur'
 import Spinner from 'react-native-loading-spinner-overlay'
+import PopupDialog, { DialogTitle, DialogButton } from 'react-native-popup-dialog'
 
 export default class Screen extends Core.Screen {
 
@@ -94,6 +95,37 @@ export default class Screen extends Core.Screen {
   renderData(data) {
     return ( <View style={this.styles.containers.main}>
     </View>)
+  }
+
+  renderDialogContent() {
+    return (<View/>)
+  }
+
+  renderDialogTitle() {
+    return ""
+  }
+
+  showDialog() {
+    this.popupDialog && this.popupDialog.show(() => {})
+  }
+
+  hideDialog() {
+    this.popupDialog && this.popupDialog.dismiss(() => {})
+  }
+
+  okDialog() {
+    this.hideDialog()
+  }
+
+  renderDialog() {
+    return (
+      <PopupDialog
+          actions={[<DialogButton key={"_ok"} text="OK" align="center" onPress={this.okDialog.bind(this)}/>]}
+          dialogTitle={<DialogTitle title={this.renderDialogTitle()} />}
+          ref={(popupDialog) => { this.popupDialog = popupDialog; }}
+        >
+        { this.renderDialogContent() }
+        </PopupDialog>)
   }
 
   renderDataDefaults() {

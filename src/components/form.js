@@ -150,13 +150,7 @@ export default class FormScreen extends Screen {
   }
 
   renderData() {
-    return this.renderContent() 
-    // (
-    //   <ScrollView
-    //     keyboardShouldPersistTaps="always"
-    //     contentContainerStyle={this.styles.container}>
-    //     { this.renderContent() }
-    //   </ScrollView>)
+    return this.renderContent()
   }
 
   keyboardType(type) {
@@ -344,7 +338,6 @@ export default class FormScreen extends Screen {
     return fields
   }
 
-
   renderLogo() {
     return  (<View/>)
   }
@@ -415,7 +408,8 @@ export default class FormScreen extends Screen {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[this.styles.container, {
               flexDirection: "row", alignItems: "center", justifyContent: "center", flex: 1 }]}>
-                { this.renderContentInner() }
+              { this.renderDialog() }
+              { this.renderContentInner() }
             </View>
           </TouchableWithoutFeedback>)
   }
