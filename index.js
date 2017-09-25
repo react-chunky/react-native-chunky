@@ -11,7 +11,7 @@ import Screen from './src/core/Screen'
 import ListScreen from './src/core/ListScreen'
 import App from './src/core/App'
 
-global.localStorage = AsyncStorage
+global.storage = AsyncStorage
 global.firebase = RNFirebase.initializeApp({
   debug: true
 })

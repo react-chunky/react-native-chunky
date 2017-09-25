@@ -92,6 +92,14 @@ export default class Screen extends Core.Screen {
     this.props.navigation.goBack()
   }
 
+  get account() {
+    return this.props.account
+  }
+
+  get isLoggedIn() {
+    return this.account
+  }
+
   renderData(data) {
     return ( <View style={this.styles.containers.main}>
     </View>)
