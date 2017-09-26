@@ -40,7 +40,10 @@
     "react-native-chunky": "0.x",
     "react-native-maps": "^0.16.4",
     "react-native-sound": "^0.10.4",
-    "react-native-popup-dialog": "^0.9.34"
+    "react-native-popup-dialog": "^0.9.34",
+    "react-native-audio-streaming": "^2.3.2",
+    "react-native-maps": "^0.16.4",
+    "react-native-sound": "^0.10.4"
   },
   "devDependencies": {
     "react-native-savor": "0.x"
