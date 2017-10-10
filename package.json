@@ -1,6 +1,6 @@
 {
   "name": "react-native-chunky",
-  "version": "0.8.35",
+  "version": "0.8.36",
   "description": "The Chunky Mobile Framework",
   "scripts": {
     "test": "react-native-savor test",
@@ -43,7 +43,9 @@
     "react-native-popup-dialog": "^0.9.34",
     "react-native-audio-streaming": "^2.3.2",
     "react-native-maps": "^0.16.4",
-    "react-native-sound": "^0.10.4"
+    "react-native-sound": "^0.10.4",
+    "react-native-modalbox": "^1.4.2",
+    "react-native-youtube": "^1.0.0-beta.3"
   },
   "devDependencies": {
     "react-native-savor": "0.x"
